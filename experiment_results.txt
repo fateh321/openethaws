@@ -1,0 +1,5 @@
+Name, Hop-1 , Hop-2, Hop-3, Hop-4, Hop-5
+swapTokensForExactTokens, 34.47, 40.37, 42.87, 51.89, 138.99
+swapExactTokensForTokens, 34.21, 40.09, 42.62, 51.61, 168.71
+ERC-20 Token Transfer, 24.80, 52.59
+AddLiquidity, 32.91, 37.47, 42.04, 251.04

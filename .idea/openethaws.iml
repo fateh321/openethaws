@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/bin/chainspec/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bin/ethkey/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bin/ethstore/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bin/evmbin/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/bin/evmbin/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bin/oe/logger/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/accounts/ethkey/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/accounts/ethstore/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/accounts/ethstore/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/accounts/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/concensus/ethash/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/concensus/ethash/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/concensus/miner/local-store/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/concensus/miner/price-info/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/concensus/miner/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/concensus/miner/stratum/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/concensus/miner/using-queue/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/bloom/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/blooms-db/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/blooms-db/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/db/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/journaldb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/memory-db/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/memory-db/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/migration-rocksdb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/migration-rocksdb/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/db/patricia-trie-ethereum/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/ethcore/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/ethcore/blockchain/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/ethcore/service/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/ethcore/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/ethcore/sync/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/ethcore/types/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/ethjson/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/hyperproofs/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/net/fake-fetch/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/net/fetch/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/net/network-devp2p/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/net/network-devp2p/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/net/network/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/net/node-filter/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/rpc-common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/rpc-servers/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/rpc/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/runtime/io/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/runtime/runtime/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/transaction-pool/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/EIP-152/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/EIP-712/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/cli-signer/rpc-client/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/cli-signer/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/dir/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/fastmap/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/keccak-hasher/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/len-caching-lock/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/macros/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/memory-cache/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/memzero/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/panic-hook/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/rlp-compress/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/rlp-compress/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/rlp-derive/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/rlp-derive/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/stats/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/time-utils/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/triehash-ethereum/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/unexpected/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/util/version/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/vm/builtin/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/vm/call-contract/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/vm/evm/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/vm/evm/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/vm/vm/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/vm/wasm/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

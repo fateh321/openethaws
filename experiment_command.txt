@@ -1,0 +1,11 @@
+experiments:
+
+node contract_uniswap/deploy_erc20.js
+node contract_uniswap/deploy_erc20.js
+node contract_uniswap/deploy_factory.js
+node contract_uniswap/deploy_factory.js
+node contract_uniswap/deploy_router.js
+node contract_uniswap/add_liquidity.js
+//next add token balance
+node exp_3_0_0.js 
+node exp_3_0_1.js
