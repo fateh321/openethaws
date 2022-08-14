@@ -265,7 +265,7 @@ impl AggProof{
     pub fn txn_lifetime() -> u64 {
         20u64
     }
-    pub fn incomplete_txn_buffer_length() -> u64{32000u64}
+    pub fn incomplete_txn_buffer_length() -> u64{8000u64}
     pub fn hyperproof_bits()-> u32{24u32}
     pub fn block_data_count() -> u64 {1024u64}
     // pub fn author_shard(address: Address) -> u64 {
