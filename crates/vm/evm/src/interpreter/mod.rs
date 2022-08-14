@@ -1022,7 +1022,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                     let key_shard = AggProof::concat_hash(ext.origin_address(), key);
                     let word = ext.storage_at(&key)?.into_uint();
                     AggProof::incr_sload_count(1u64);
-                    println!("SLOAD (CREATE) fetching storage at {}", key);
+                    debug!(target:"aws","SLOAD (CREATE) fetching storage at {}", key);
                     self.stack.push(word);
                     // add gas for load;
                     ext.add_gas(200u64, 0u64);
@@ -1032,10 +1032,10 @@ impl<Cost: CostType> Interpreter<Cost> {
 
                     // #[cfg(feature = "shard")]
                     let key_shard = AggProof::concat_hash(ext.origin_address(), key);
-                    println!("trying to load at key {} and key_shard {} and address {}",key, key_shard, ext.origin_address());
+                    debug!(target:"aws","trying to load at key {} and key_shard {} and address {}",key, key_shard, ext.origin_address());
                     let val = ext.hash_map_storage_at(&key_shard);
                     let word = if val.1 {
-                        print!("found the key inside the hashmap");
+                        // print!("found the key inside the hashmap");
                         val.0
 
                     } else {
@@ -1055,14 +1055,14 @@ impl<Cost: CostType> Interpreter<Cost> {
                         } else {
                             ext.set_txn_incomplete();
                             ext.set_next_shard(ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                            println!("Stopping execution from SLOAD at address {}", ext.origin_address());
+                            debug!(target:"aws","Stopping execution from SLOAD at address {}", ext.origin_address());
                             return Ok(InstructionResult::StopExecution);
                         }
                     };
                     // let word = ext.storage_at(&key)?.into_uint();
                     // add gas for load;
                     ext.add_gas(200u64, 0u64);
-                    println!("SLOAD fetching storage at key {} and address {} with value {}", key, ext.origin_address(), word);
+                    debug!(target:"aws","SLOAD fetching storage at key {} and address {} with value {}", key, ext.origin_address(), word);
                     self.stack.push(word);
 
                     ext.al_insert_storage_key(self.params.address, key);
@@ -1095,9 +1095,9 @@ impl<Cost: CostType> Interpreter<Cost> {
                     }
                     AggProof::incr_sstore_count(1u64);
                     ext.set_storage(key, BigEndianHash::from_uint(&val))?;
-                    println!("SSTORE setting storage at {} with val {}", key, val);
+                    debug!(target:"aws","SSTORE setting storage at {} with val {}", key, val);
                     AggProof::pushAddressDelta(key_shard.to_low_u64_be().rem_euclid(2u64.pow(AggProof::hyperproof_bits())), delta_string.clone(), ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                    println!("delta {} from address {} in shard {}", delta_string, key_shard , ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
+                    debug!(target:"aws","delta {} from address {} in shard {}", delta_string, key_shard , ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
                 }else {
                     let key = BigEndianHash::from_uint(&self.stack.pop_back());
                     let val = self.stack.pop_back();
@@ -1146,13 +1146,13 @@ impl<Cost: CostType> Interpreter<Cost> {
                                 } else{
                                     ext.set_txn_incomplete();
                                     ext.set_next_shard(ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                                    println!("Stopping execution from SSTORE");
+                                    debug!(target:"aws","Stopping execution from SSTORE");
                                     return Ok(InstructionResult::StopExecution);
 
                                 }
 
                             };
-                            println!("current val for calculating delta is {}", word);
+                            debug!(target:"aws","current val for calculating delta is {}", word);
                             if word.is_zero() && !val.is_zero(){
                                 ext.add_gas(0u64, 20000u64);
                             }else {
@@ -1183,10 +1183,10 @@ impl<Cost: CostType> Interpreter<Cost> {
                                 }
                                 AggProof::incr_sstore_count(1u64);
                                 ext.set_storage(key, BigEndianHash::from_uint(&val))?;
-                                println!("SSTORE (Some(true)) setting storage at {} with val {} and code address", key, val);
+                                debug!(target:"aws","SSTORE (Some(true)) setting storage at {} with val {} and code address", key, val);
                             }
                             AggProof::pushAddressDelta(key_shard.to_low_u64_be().rem_euclid(2u64.pow(AggProof::hyperproof_bits())), delta_string.clone(), ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                            println!("delta {} from address {} in shard {}", delta_string, key_shard , ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
+                            debug!(target:"aws","delta {} from address {} in shard {}", delta_string, key_shard , ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
                         } else {
 
                             // should be able to retrieve the value
@@ -1209,13 +1209,13 @@ impl<Cost: CostType> Interpreter<Cost> {
                                 } else{
                                     ext.set_txn_incomplete();
                                     ext.set_next_shard(ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                                    println!("Stopping execution from SSTORE");
+                                    debug!(target:"aws","Stopping execution from SSTORE");
                                     return Ok(InstructionResult::StopExecution);
 
                                 }
 
                             };
-                            println!("current val for calculating delta is {}", word);
+                            debug!(target:"aws","current val for calculating delta is {}", word);
                             if word.is_zero() && !val.is_zero(){
                                 ext.add_gas(0u64, 20000u64);
                             }else {
@@ -1278,13 +1278,13 @@ impl<Cost: CostType> Interpreter<Cost> {
                                 } else{
                                     ext.set_txn_incomplete();
                                     ext.set_next_shard(ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                                    println!("Stopping execution from SSTORE");
+                                    debug!(target:"aws","Stopping execution from SSTORE");
                                     return Ok(InstructionResult::StopExecution);
 
                                 }
 
                             };
-                            println!("current val for calculating delta is {}", word);
+                            debug!(target:"aws","current val for calculating delta is {}", word);
                             if word.is_zero() && !val.is_zero(){
                                 ext.add_gas(0u64, 20000u64);
                             }else {

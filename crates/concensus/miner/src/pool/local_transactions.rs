@@ -252,7 +252,8 @@ impl txpool::Listener<Transaction> for LocalTransactionsList {
             return;
         }
 
-        info!(target: "own_tx", "Transaction culled (hash {:?})", tx.hash());
+        // info!(target: "own_tx", "Transaction culled (hash {:?})", tx.hash());
+        debug!(target: "aws", "Transaction culled (hash {:?})", tx.hash());
         // debug!(target: "own_tx", "Transaction pool looks like {:?})", self);
         self.insert(*tx.hash(), Status::Culled(tx.clone()));
     }

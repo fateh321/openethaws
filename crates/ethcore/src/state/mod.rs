@@ -1069,7 +1069,7 @@ impl<B: Backend> State<B> {
         AggProof::pushAddressDelta(a.to_low_u64_be().rem_euclid(2u64.pow(AggProof::hyperproof_bits())), incr.to_string(), a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
         debug!(target:"txn", "increasing {} from address {} in shard {}", incr, a , a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
         if !incr.is_zero() {
-            println!("increasing {} from address {} in shard {}", incr, a , a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
+            debug!(target:"aws","increasing {} from address {} in shard {}", incr, a , a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
             // let mut balance = self.data_hash_map_txn_storage_at(a);
             // if balance.1 {
             //     let temp_val = self.global_hash_map_storage_at(a);
@@ -1116,7 +1116,7 @@ impl<B: Backend> State<B> {
         AggProof::pushAddressDelta(a.to_low_u64_be().rem_euclid(2u64.pow(AggProof::hyperproof_bits())), neg.clone(), a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
         debug!(target: "txn","decreasing {} from address {} in shard {}", decr, a , a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
         if !decr.is_zero() {
-            println!("decreasing {} from address {} in shard {}", decr, a , a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
+            debug!(target:"aws","decreasing {} from address {} in shard {}", decr, a , a.to_low_u64_be().rem_euclid(AggProof::shard_count()));
             let mut balance = self.data_hash_map_txn_storage_at(a);
             if balance.1 {
                 let temp_val = self.global_hash_map_storage_at_one_round(a);

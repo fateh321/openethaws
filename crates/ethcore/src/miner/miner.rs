@@ -799,7 +799,7 @@ impl Miner {
                 tx_new.lock().send(a).unwrap();
             });
         };
-        println!("proof_data looks like{:?} and txn_count looks like {}", self.proof_data.read(), tx_count);
+        debug!(target:"aws","proof_data looks like{:?} and txn_count looks like {}", self.proof_data.read(), tx_count);
         let elapsed = block_start.elapsed();
         debug!(target: "miner", "Pushed {} transactions in {} ms", tx_count, took_ms(&elapsed));
 

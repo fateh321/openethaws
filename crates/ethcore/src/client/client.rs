@@ -858,7 +858,7 @@ impl Importer {
 
         // t_nb 9.12 commit changed to become current greatest by applying pending insertion updates (Sync point)
         chain.commit();
-         println!("block looklike {:?}",block.header);
+         debug!(target:"aws","block looklike {:?}",block.header);
         // t_nb 9.13 check epoch end. Related only to AuRa and it seems light engine
         self.check_epoch_end(&header, &finalized, &chain, client);
 

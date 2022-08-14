@@ -356,7 +356,7 @@ impl<'x> OpenBlock<'x> {
         // debug!(target: "miner", "transaction looks like {:?}", t);
         let mut t= if !t.contains_balance(){
             AggProof::incr_bal_read_count(1u64);
-            println!("contains balance read");
+            debug!(target:"aws","contains balance read");
             let mut balance = self.state.balance(&sender)?;
             let mut begin_round_balance = self.state.hash_map_beginning_storage_at(&sender);
             if begin_round_balance.1 {
@@ -610,7 +610,8 @@ impl<'x> OpenBlock<'x> {
         let input_count = t.shard_data_hashmap().len();
         let proof_count = t.shard_proof_data().len();
         let gas_count = t.gas_list().len();
-        println!("Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);
+        if proof_count > 0 {println!("Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);}
+
         self.block
             .transactions_set
             .insert(h.unwrap_or_else(|| t.hash()));

@@ -1591,12 +1591,12 @@ impl<'a, B: 'a + StateBackend> Executive<'a, B> {
                     }
 
                 }
-                println!("the total load store gas is {}, store_gas {}", additional_gas, load_store_gas.1);
+                debug!(target:"aws","the total load store gas is {}, store_gas {}", additional_gas, load_store_gas.1);
                 match &res{
                     Ok(res_inner) => {
                         let mut res_inner_1 = res.unwrap();
                         res_inner_1.gas_left = res_inner_1.gas_left.saturating_sub(additional_gas);
-                        println!("gas_left is {}", res_inner_1.gas_left);
+                        debug!(target:"aws","gas_left is {}", res_inner_1.gas_left);
                         res = Ok(res_inner_1);
                     }
                     _ => {}
@@ -1628,11 +1628,11 @@ impl<'a, B: 'a + StateBackend> Executive<'a, B> {
                     self.state
                         .set_storage(&y.1, y.2.clone(), BigEndianHash::from_uint(&y.3));
                     AggProof::incr_sstore_count(1u64);
-                    println!("SSTORE setting storage at {} with val {} and code address {}", y.2, y.3, y.1);
+                    debug!(target:"aws","SSTORE setting storage at {} with val {} and code address {}", y.2, y.3, y.1);
                 }
                 self.state.global_hash_map_insert(y.0, y.3);
                 AggProof::pushAddressDelta(x.0.clone(), x.1.clone(),x.2.clone());
-                println!("delta {} from address {} in shard {}", x.1, x.0 , x.2);
+                debug!(target:"aws","delta {} from address {} in shard {}", x.1, x.0 , x.2);
 
             }
         }
