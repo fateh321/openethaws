@@ -1,7 +1,10 @@
 const Web3 = require('web3');
 const fs = require('fs');
-const bytecode=fs.readFileSync('/data/ubuntu/openethaws/contract_easy/uniswap_sol_uniswap.bin').toString();
-const abi=JSON.parse(fs.readFileSync('/data/ubuntu/openethaws/contract_easy/uniswap_sol_uniswap.abi').toString());
+const path = require("path");
+const bytecode=fs.readFileSync(path.resolve(__dirname, "router/router_sol_UniswapV2Router02.bin")).toString();
+const abi=JSON.parse(fs.readFileSync(path.resolve(__dirname, "router/router_sol_UniswapV2Router02.abi")).toString());
+
+const factoryAddress = '0x6BE31B63b47398eDD9B1D1f427DC9c1D564c050e';
 
 const privKey =
    '4f3ea91012fc27131fdf2a62568725654726c04c46572c3eb00754b5455fe3e7'; // Genesis private key
@@ -13,7 +16,7 @@ const deploy = async () => {
 const erc20 = new web3.eth.Contract(abi);
 const erc20Tx = erc20.deploy({
       data: bytecode,
-      arguments: [50000],
+      arguments: [factoryAddress],
    });
 const createTransaction = await web3.eth.accounts.signTransaction(
       {

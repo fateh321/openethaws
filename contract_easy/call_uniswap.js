@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const fs = require('fs');
-const abi = JSON.parse(fs.readFileSync('/home/srisht/project_repo/openethereum/contract_easy/uniswap_sol_uniswap.abi').toString());
+const abi = JSON.parse(fs.readFileSync('/data/ubuntu/openethaws/contract_easy/uniswap_sol_uniswap.abi').toString());
 
 // Initialization
 const privKey =

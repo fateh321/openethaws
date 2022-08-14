@@ -28,8 +28,8 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	const batch = 4000;
-	for (let i = 0; i < 100; i++) {
+	batch = 4000;
+	for (let i = 0; i < batch; i++) {
 		
 		const _value = 1000000
 
@@ -38,17 +38,17 @@ queryParameter().then((res)=>
 		const address = keys[i].PubKey;
 		const from_address = '0x93a88B7893FCDb130ab9209f63AB2e6854e617A1';
 		// Contract Tx
-		const erc20_1 = new web3.eth.Contract(abi, tokenAddress1);
+		const erc20_1 = new web3.eth.Contract(abi, tokenAddress2);
 		const encoded = erc20_1.methods.transferFrom(from_address, address, _value).encodeABI();
 
 		const erc20_1tx = async () => {
 		   console.log(
-		      `Calling the transfer to ${address}  in contract at address ${tokenAddress1}`
+		      `Calling the transfer to ${address}  in contract at address ${tokenAddress2}`
 		   );
 		   const createTransaction = await web3.eth.accounts.signTransaction(
 		      {
 		         from: address,
-		         to: tokenAddress1,
+		         to: tokenAddress2,
 		         data: encoded,
 		         gas: '429496',
 		      },

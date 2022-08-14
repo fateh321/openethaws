@@ -1,7 +1,7 @@
 const Web3 = require('web3');
 const fs = require('fs');
-const bytecode=fs.readFileSync('/home/srisht/project_repo/openethereum/contract_easy/uniswap_sol_erc20.bin').toString();
-const abi=JSON.parse(fs.readFileSync('/home/srisht/project_repo/openethereum/contract_easy/uniswap_sol_erc20.abi').toString());
+const bytecode=fs.readFileSync('/data/ubuntu/openethaws/contract_easy/uniswap_sol_erc20.bin').toString();
+const abi=JSON.parse(fs.readFileSync('/data/ubuntu/openethaws/contract_easy/uniswap_sol_erc20.abi').toString());
 
 const privKey =
    '4f3ea91012fc27131fdf2a62568725654726c04c46572c3eb00754b5455fe3e7'; // Genesis private key

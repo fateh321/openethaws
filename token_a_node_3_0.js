@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 const abi=JSON.parse(fs.readFileSync(path.resolve(__dirname, "contract_uniswap/router/router_sol_ERC20.abi")).toString());
 
-const web3 = new Web3('http://localhost:8540');
+const web3 = new Web3('http://localhost:8543');
 const tokenAddress1 = '0x4FF947e19ab44afA198A3DdEaaeD817b4a8417FF';
 const tokenAddress2 = '0xdDa66C80C54c37d65B960AC8dFd2F0fDD2449B38';
 
@@ -29,7 +29,7 @@ queryParameter().then((res)=>
 	let len = keys.length;
 	console.log(len);
 	const batch = 4000;
-	for (let i = 0; i < 100; i++) {
+	for (let i = 3*batch; i < 4*batch; i++) {
 		
 		const _value = 1000000
 
