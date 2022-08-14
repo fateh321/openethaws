@@ -11,7 +11,7 @@ use std::path::PathBuf;
 fn main() {
     // Tell cargo to look for shared libraries in the specified directory
     // println!("cargo:rustc-link-search=native={}", "./hyperproofs-go");
-    println!("cargo:rustc-link-search=native={}", "/home/ubuntu/libhyper/hyperproofs-go");
+    println!("cargo:rustc-link-search=native={}", "/data/ubuntu/libhyper/hyperproofs-go");
     // println!("cargo:rustc-env=LD_LIBRARY_PATH=hyperproofs-go/");
     // println!("cargo:rustc-link-search=native={}", "/usr/local/lib");
     // Tell cargo to tell rustc to link the system bzip2

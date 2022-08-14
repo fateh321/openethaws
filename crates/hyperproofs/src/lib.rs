@@ -283,14 +283,14 @@ impl AggProof{
     //
     // }
     pub fn init(round:u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(r:u64) -> i64 > = lib.get(b"initVc")?;
             Ok(func(round))
         }
     }
     pub fn agg(nativeShard: u64) -> lib::Result<(String,bool)>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(s: u64) -> aggVc_return > = lib.get(b"aggVc")?;
             match func(nativeShard) {
@@ -309,7 +309,7 @@ impl AggProof{
     }
 
     pub fn pushAddressDelta(address: u64, delta: String, shard: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         let c_delta = CString::new(delta)?;
         let go_str_delta = GoString {
             p: c_delta.as_ptr(),
@@ -321,7 +321,7 @@ impl AggProof{
         }
     }
     pub fn resetAddressDelta(shard: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(s: u64) -> i64 > = lib.get(b"resetAddressDeltaVc")?;
             Ok(func(shard))
@@ -329,7 +329,7 @@ impl AggProof{
     }
     //push address for which proof needs to be aggregated
     pub fn pushAddressCommit(address: u64, shard: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(a: u64, s: u64) -> i64 > = lib.get(b"pushAddressCommitVc")?;
             Ok(func(address,shard))
@@ -337,7 +337,7 @@ impl AggProof{
     }
     //push address for which proof needs to be aggregated
     pub fn resetAddressCommit(shard: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(s: u64) -> i64 > = lib.get(b"resetAddressCommitVc")?;
             Ok(func(shard))
@@ -345,7 +345,7 @@ impl AggProof{
     }
 
     pub fn pushAddressBalanceVerify(address: u64, bal: String, shard: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         let c_bal = CString::new(bal)?;
         let go_str_bal = GoString {
             p: c_bal.as_ptr(),
@@ -357,7 +357,7 @@ impl AggProof{
         }
     }
     pub fn resetAddressBalanceVerify(shard: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(s: u64) -> i64 > = lib.get(b"resetAddressBalanceVerifyVc")?;
             Ok(func(shard))
@@ -369,7 +369,7 @@ impl AggProof{
             p: c_input.as_ptr(),
             n: c_input.as_bytes().len() as isize,
         };
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(i: GoString, s:u64, r:u64) -> u8> = lib.get(b"verifyProofVc")?;
             match func(go_str_input, shard, round) {
@@ -379,21 +379,21 @@ impl AggProof{
         }
     }
     pub fn commit(nativeShard: u64, round: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(n: u64, r: u64) -> i64 > = lib.get(b"commitVc")?;
             Ok(func(nativeShard,round))
         }
     }
     pub fn updateTree(nativeShard: u64) -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn(n: u64) -> i64 > = lib.get(b"updateShardProofTreeVc")?;
             Ok(func(nativeShard))
         }
     }
     pub fn resetPrevCommit() -> lib::Result<i64>{
-        let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+        let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
             let func: lib::Symbol<unsafe extern "C" fn() -> i64 > = lib.get(b"prevDigestResetVc")?;
             Ok(func())
@@ -401,7 +401,7 @@ impl AggProof{
     }
 }
 pub fn init(round:u64) -> lib::Result<i64>{
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     unsafe {
         let func: lib::Symbol<unsafe extern "C" fn(r:u64) -> i64 > = lib.get(b"initVc")?;
         Ok(func(round))
@@ -409,7 +409,7 @@ pub fn init(round:u64) -> lib::Result<i64>{
 }
 
 pub fn pushAddressDelta(address: u64, delta: String, shard: u64) -> lib::Result<i64>{
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     let c_delta = CString::new(delta)?;
     let go_str_delta = GoString {
       p: c_delta.as_ptr(),
@@ -422,7 +422,7 @@ pub fn pushAddressDelta(address: u64, delta: String, shard: u64) -> lib::Result<
 }
 //push address for which proof needs to be aggregated
 pub fn pushAddressCommit(address: u64, shard: u64) -> lib::Result<i64>{
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     unsafe {
         let func: lib::Symbol<unsafe extern "C" fn(a: u64, s: u64) -> i64 > = lib.get(b"pushAddressCommitVc")?;
         Ok(func(address,shard))
@@ -430,7 +430,7 @@ pub fn pushAddressCommit(address: u64, shard: u64) -> lib::Result<i64>{
 }
 
 pub fn pushAddressBalanceVerify(address: u64, bal: String, shard: u64) -> lib::Result<i64>{
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     let c_bal = CString::new(bal)?;
     let go_str_bal = GoString {
       p: c_bal.as_ptr(),
@@ -443,7 +443,7 @@ pub fn pushAddressBalanceVerify(address: u64, bal: String, shard: u64) -> lib::R
 }
 
 pub fn agg(nativeShard: u64) -> lib::Result<(String,bool)>{
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     unsafe {
         let func: lib::Symbol<unsafe extern "C" fn(s: u64) -> aggVc_return > = lib.get(b"aggVc")?;
         match func(nativeShard) {
@@ -462,7 +462,7 @@ pub fn agg(nativeShard: u64) -> lib::Result<(String,bool)>{
 }
 
 pub fn commit(nativeShard: u64, round: u64) -> lib::Result<i64>{
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     unsafe {
         let func: lib::Symbol<unsafe extern "C" fn(n: u64, r: u64) -> i64 > = lib.get(b"commitVc")?;
         Ok(func(nativeShard,round))
@@ -475,7 +475,7 @@ pub fn verifyProof(input: String, shard:u64,round:u64) -> lib::Result<bool>{
       p: c_input.as_ptr(),
       n: c_input.as_bytes().len() as isize,
     };
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     unsafe {        
         let func: lib::Symbol<unsafe extern "C" fn(i: GoString, s:u64, r:u64) -> u8> = lib.get(b"verifyProofVc")?;
         match func(go_str_input, shard, round) {
@@ -486,7 +486,7 @@ pub fn verifyProof(input: String, shard:u64,round:u64) -> lib::Result<bool>{
 }
 
 pub fn demoProofShard() -> lib::Result<String>{
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     unsafe {        
         let func: lib::Symbol<unsafe extern "C" fn() -> *mut ::std::os::raw::c_char> = lib.get(b"demoProof")?;
         Ok(CStr::from_ptr(func()).to_string_lossy().into_owned())
@@ -504,7 +504,7 @@ pub fn demoVerifyShard(input: String) -> lib::Result<u8>{
       p: c_input.as_ptr(),
       n: c_input.as_bytes().len() as isize,
     };
-    let lib = lib::Library::new("/home/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
+    let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
     unsafe {        
         let func: lib::Symbol<unsafe extern "C" fn(i: GoString) -> u8> = lib.get(b"demoVerify")?;
         Ok(func(go_str_input))
