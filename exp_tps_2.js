@@ -3,7 +3,7 @@ const csv = require('csv-parser');
 const Web3 = require('web3');
 const fs = require('fs');
 const path = require("path");
-const web3 = new Web3('http://localhost:8540');
+const web3 = new Web3('http://localhost:8542');
 // const web3 = new Web3('172.31.39.234:8541');
 
 var queryParameter = ()=> new Promise( resolve =>{
