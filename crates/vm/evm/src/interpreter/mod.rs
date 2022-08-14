@@ -43,7 +43,7 @@ use self::{
     memory::Memory,
     stack::{Stack, VecStack},
 };
-
+use log::debug;
 use bit_set::BitSet;
 
 const GASOMETER_PROOF: &str = "If gasometer is None, Err is immediately returned in step; this function is only called by step; qed";
@@ -710,7 +710,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                 self.return_data = ReturnData::empty();
                 // no shard here coz create happens in all shards
                 AggProof::incr_bal_read_count(1u64);
-                println!("create2 bal read");
+                // println!("create2 bal read");
                 let can_create = ext.balance(&self.params.address)? >= endowment
                     && ext.depth() < ext.schedule().max_depth;
                 if !can_create {
@@ -901,7 +901,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                 };
             }
             instructions::RETURN => {
-                println!("transaction RETURN");
+                // println!("transaction RETURN");
                 let init_off = self.stack.pop_back();
                 let init_size = self.stack.pop_back();
 
@@ -913,7 +913,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                 });
             }
             instructions::REVERT => {
-                println!("transaction reverted");
+                // println!("transaction reverted");
                 ext.reverted(true);
                 let init_off = self.stack.pop_back();
                 let init_size = self.stack.pop_back();
@@ -926,11 +926,11 @@ impl<Cost: CostType> Interpreter<Cost> {
                 });
             }
             instructions::STOP => {
-                println!("transaction STOP");
+                // println!("transaction STOP");
                 return Ok(InstructionResult::StopExecution);
             }
             instructions::SUICIDE => {
-                println!("transaction SUICIDE");
+                // println!("transaction SUICIDE");
                 let address = u256_to_address(&self.stack.pop_back());
                 ext.al_insert_address(address.clone());
                 ext.suicide(&address)?;
@@ -1352,7 +1352,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                 } else {
                     if address.to_low_u64_be().rem_euclid(AggProof::shard_count()) == AggProof::get_shard(){
                         AggProof::incr_bal_read_count(1u64);
-                        println!("reading balance in interpreter 1");
+                        // println!("reading balance in interpreter 1");
                         let balance_temp = ext.balance(&address)?;
                         let mut begin_round_word = ext.hash_map_beginning_storage_at(&address);
                         if begin_round_word.1{
@@ -1366,7 +1366,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                     } else{
                         ext.set_txn_incomplete();
                         ext.set_next_shard(address.to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                        println!("stopping execution from balance");
+                        // println!("stopping execution from balance");
                         return Ok(InstructionResult::StopExecution);
 
                     }
@@ -1491,7 +1491,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                 } else {
                     if self.params.address.to_low_u64_be().rem_euclid(AggProof::shard_count()) == AggProof::get_shard(){
                         AggProof::incr_bal_read_count(1u64);
-                        println!("reading balance in interpreter 2");
+                        // println!("reading balance in interpreter 2");
                         let balance_temp = ext.balance(&self.params.address)?;
                         let mut begin_round_word = ext.hash_map_beginning_storage_at(&self.params.address);
                         if begin_round_word.1{
@@ -1505,7 +1505,7 @@ impl<Cost: CostType> Interpreter<Cost> {
                     } else{
                         ext.set_txn_incomplete();
                         ext.set_next_shard(self.params.address.to_low_u64_be().rem_euclid(AggProof::shard_count()));
-                        print!("stopping execution SELFBALANCE");
+                        // print!("stopping execution SELFBALANCE");
                         return Ok(InstructionResult::StopExecution);
 
                     }
