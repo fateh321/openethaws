@@ -24,7 +24,7 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	for (let i = 0; i < 10000; i++) {
+	for (let i = 0; i < 2000; i++) {
 		const addressTo = '0x65e154ef9a2967e922936415bb0e2204be87b64c';
 		// Initialization
 		const privKey = keys[i].Privkey; // Genesis private key
