@@ -26,7 +26,7 @@ const bal = createCsvWriter({
 const data = [];
 const balance = [];
 
-let num = 10000;
+let num = 16000;
 //clearing file
 fs.writeFile('test.txt','', err => {
 if (err) {

@@ -24,8 +24,17 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	const t = 4000
+	const t = 16000;
+	const batch = 4000;
 	for (let i = 0; i < t; i++) {
+
+		if (i%batch === 0){
+			for (let j = 0; i < 1000; i++) {
+				console.log(" ");
+			}
+		}
+		// var sleep = require('system-sleep');
+		// sleep(1);
 		const addressTo = '0x65e154ef9a2967e922936415bb0e2204be87b64c';
 		// Initialization
 		const privKey = keys[i].Privkey; // Genesis private key
@@ -57,7 +66,7 @@ queryParameter().then((res)=>
 
 		deploy();
 
-
+		
 
 	}
 
@@ -66,3 +75,4 @@ queryParameter().then((res)=>
 )
 
 
+function foo(){console.log("take a chill pill");}
