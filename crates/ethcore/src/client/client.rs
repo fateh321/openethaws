@@ -3124,7 +3124,7 @@ impl PrepareOpenBlock for Client {
         //only propagate the real shard state root
         let state_root = chain.shard_state_root.read().clone();
         let sr;
-        if state_root.1 == best_header.number() && state_root.1>2{
+        if state_root.1 == best_header.number() && state_root.1>3{
             sr = state_root.0.clone();
         }else {
             sr = best_header.state_root().clone();
