@@ -607,11 +607,12 @@ impl<'x> OpenBlock<'x> {
             }
         }
         let t_rlp_size = t.encode().len();
+        let t_rlp_legacy_size = t.encode_no_bal().len();
         let input_count = t.shard_data_hashmap().len();
         let proof_count = t.shard_proof_data().len();
         let gas_count = t.gas_list().len();
         if proof_count > 0 {println!("Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);}
-
+        println!("Size of the legacy version is {}B", t_rlp_legacy_size);
         self.block
             .transactions_set
             .insert(h.unwrap_or_else(|| t.hash()));
