@@ -62,7 +62,7 @@ queryParameter().then((res)=>
 		   const createTransaction = await web3.eth.accounts.signTransaction(
 		      {
 		         from: address,
-		         to: tokenAddress1,
+		         to: tokenAddress,
 		         data: encoded,
 		         gas: '429496',
 		      },
