@@ -30,7 +30,7 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	const batch = 1000;
+	const batch = 2000;
 	for (let i = 2*batch; i < 3*batch; i++) {
 		
 		const _value = 1000000
@@ -42,11 +42,11 @@ queryParameter().then((res)=>
 		var tokenAddress;
 		var rand = Math.floor(Math.random() * 4); 
 		// if (i%2 == 0){
-		if (rand%2 == 0){
+		if (rand%4 == 0){
 			tokenAddress = tokenAddress1;
-		}else if(rand%2 == 1){
+		}else if(rand%4 == 1){
 			tokenAddress = tokenAddress2;
-		} else if (rand%2 == 2){
+		} else if (rand%4 == 2){
 			tokenAddress = tokenAddress3;
 		}else{
 			tokenAddress = tokenAddress4;
