@@ -28,7 +28,7 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	batch = 4000;
+	batch = 2000;
 	for (let i = 0; i < batch; i++) {
 		
 		const _value = 1000000

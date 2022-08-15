@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 const abi=JSON.parse(fs.readFileSync(path.resolve(__dirname, "contract_uniswap/router/router_sol_ERC20.abi")).toString());
 
-const web3 = new Web3('http://localhost:8541');
+const web3 = new Web3('http://localhost:8542');
 const tokenAddress1 = '0x4FF947e19ab44afA198A3DdEaaeD817b4a8417FF';
 const tokenAddress2 = '0xdDa66C80C54c37d65B960AC8dFd2F0fDD2449B38';
 
@@ -28,8 +28,8 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	const batch = 2000;
-	for (let i = batch; i < 2*batch; i++) {
+	batch = 2000;
+	for (let i = 6*batch; i < 7*batch; i++) {
 		
 		const _value = 1000000
 
@@ -38,17 +38,17 @@ queryParameter().then((res)=>
 		const address = keys[i].PubKey;
 		const from_address = '0x93a88B7893FCDb130ab9209f63AB2e6854e617A1';
 		// Contract Tx
-		const erc20_1 = new web3.eth.Contract(abi, tokenAddress1);
+		const erc20_1 = new web3.eth.Contract(abi, tokenAddress2);
 		const encoded = erc20_1.methods.transferFrom(from_address, address, _value).encodeABI();
 
 		const erc20_1tx = async () => {
 		   console.log(
-		      `Calling the transfer to ${address}  in contract at address ${tokenAddress1}`
+		      `Calling the transfer to ${address}  in contract at address ${tokenAddress2}`
 		   );
 		   const createTransaction = await web3.eth.accounts.signTransaction(
 		      {
 		         from: address,
-		         to: tokenAddress1,
+		         to: tokenAddress2,
 		         data: encoded,
 		         gas: '429496',
 		      },
