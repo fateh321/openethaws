@@ -457,7 +457,7 @@ impl Importer {
         // Check the block isn't so old we won't be able to enact it.
         // t_nb 7.1 check if block is older then last pruned block
         let best_block_number = client.chain.read().best_block_number();
-        if header.number() <= best_block_number && header.number()>3 {
+        if header.number() <= best_block_number && header.number()>5 {
             *already_imported = true;
             warn!(target: "client", "Block import failed for #{} ({})\nBlock is already imported (current best block: #{}).", header.number(), header.hash(), best_block_number);
             bail!("Block already imported");
@@ -3124,7 +3124,7 @@ impl PrepareOpenBlock for Client {
         //only propagate the real shard state root
         let state_root = chain.shard_state_root.read().clone();
         let sr;
-        if state_root.1 == best_header.number() && state_root.1>3{
+        if state_root.1 == best_header.number() && state_root.1>5{
             sr = state_root.0.clone();
         }else {
             sr = best_header.state_root().clone();
