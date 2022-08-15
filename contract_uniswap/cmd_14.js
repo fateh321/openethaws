@@ -13,7 +13,7 @@ const tokenAddress2 = '0xdDa66C80C54c37d65B960AC8dFd2F0fDD2449B38';
 
 const contractAddress = '0x7214a59d65AB044392D6f049058bc572C6195D72';
 const initial_price = 2;
-const _amountADesired = 100000000;
+const _amountADesired = 10000000000;
 const _amountBDesired = initial_price*_amountADesired;
 const _amountAMin = 1;
 const _amountBMin = 1;

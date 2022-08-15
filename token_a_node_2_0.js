@@ -31,7 +31,7 @@ queryParameter().then((res)=>
 	const batch = 1000;
 	for (let i = 2*batch; i < 3*batch; i++) {
 		
-		const _value = 1000000
+		const _value = 10000000
 
 		// Initialization
 		const privKey = keys[i].Privkey; // Genesis private key
