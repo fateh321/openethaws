@@ -29,7 +29,7 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < 1; i++) {
 
 		random_1 = Math.floor(Math.random() * 2); 
 		// if (i%2 == 0){
@@ -59,7 +59,7 @@ queryParameter().then((res)=>
 
 		const routertx = async () => {
 		   console.log(
-		      `swapping ${_amountIn} tokens for ${_amountOutMin} in contract at address ${contractAddress}`
+		      `swapping SETFT ${_amountIn} tokens for ${_amountOutMin} in contract at address ${contractAddress}`
 		   );
 		   const createTransaction = await web3.eth.accounts.signTransaction(
 		      {
@@ -101,7 +101,7 @@ queryParameter().then((res)=>
 
 		const routertx = async () => {
 		   console.log(
-		      `swapping ${_amountOut} tokens in contract at address ${contractAddress}`
+		      `swapping STFET ${_amountOut} tokens in contract at address ${contractAddress}`
 		   );
 		   const createTransaction = await web3.eth.accounts.signTransaction(
 		      {
