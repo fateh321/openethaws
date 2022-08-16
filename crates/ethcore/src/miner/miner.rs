@@ -783,9 +783,11 @@ impl Miner {
                   _ => {tx_count += 1;
                       let _h = open_block.state.data_hashmap_txn();
                       for _t in open_block.state.get_address_txn_vec(){
-                          self.proof_data.write().push((_t,_h.get(&_t).unwrap().clone()));
-                          AggProof::pushAddressCommit(_t.to_low_u64_be().rem_euclid(2u64.pow(AggProof::hyperproof_bits())),block_shard);
-                          proof_data_count += 1;
+                          if AggProof::agg_started() {
+                              self.proof_data.write().push((_t, _h.get(&_t).unwrap().clone()));
+                              AggProof::pushAddressCommit(_t.to_low_u64_be().rem_euclid(2u64.pow(AggProof::hyperproof_bits())), block_shard);
+                              proof_data_count += 1;
+                          }
                       }
                       // self.proof_data.write().push(shard_data);
                       // AggProof::pushAddressCommit(shard_data.0.to_low_u64_be().rem_euclid(2u64.pow(16)),block_shard);
