@@ -469,6 +469,7 @@ impl Miner {
         C: BlockChain + CallContract + BlockProducer + Nonce + Sync,
     {
         trace_time!("prepare_block");
+
         let chain_info = chain.chain_info();
         // #[cfg(feature = "shard")]
         //committing data to hyperproofs
