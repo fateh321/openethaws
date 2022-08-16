@@ -314,6 +314,7 @@ impl TransactionQueue {
         debug!(target: "txn", "entering import in queue");
         // Run verification
         trace_time!("pool::verify_and_import");
+        debug!(target:"time", "pool::verify_and_import, current time is {:?}", SystemTime::now());
         let options = self.options.read().clone();
 
         let transaction_to_replace = {
@@ -562,6 +563,7 @@ impl TransactionQueue {
     {
         debug!(target: "txqueue", "Re-computing pending set for block: {}", block_number);
         trace_time!("pool::collect_pending");
+        debug!(target:"time", "pool::collect_pending, current time is {:?}", SystemTime::now());
         let ready = Self::ready(client, block_number, current_timestamp, nonce_cap);
         collect(self.pool.read().pending(ready, includable_boundary))
     }
@@ -608,6 +610,7 @@ impl TransactionQueue {
     /// t_nb 10.5.1 Culls all stalled transactions from the pool.
     pub fn cull<C: client::NonceClient + Clone>(&self, client: C) {
         trace_time!("pool::cull");
+        debug!(target:"time", "pool::cull, current time is {:?}", SystemTime::now());
         // We don't care about future transactions, so nonce_cap is not important.
         let nonce_cap = None;
         // We want to clear stale transactions from the queue as well.
@@ -633,6 +636,7 @@ impl TransactionQueue {
         debug!(target: "txn", "Senders to remove has length {} and {:?}", senders.len(), senders);
         for chunk in senders.chunks(CULL_SENDERS_CHUNK) {
             trace_time!("pool::cull::chunk");
+            debug!(target:"time", "pool::cull::chunk, current time is {:?}", SystemTime::now());
             let state_readiness = ready::State::new(client.clone(), stale_id, nonce_cap);
             removed += self.pool.write().cull(Some(chunk), state_readiness);
         }

@@ -70,7 +70,7 @@ impl<K, V> Cache<K, V> {
 
         debug!(target: "txpool", "{}Cache: reached limit.", self.name().to_string());
         trace_time!("txpool_cache:clear");
-
+        debug!(target:"time", "txpool_cache:clear, current time is {:?}", SystemTime::now());
         // Remove excessive amount of entries from the cache.
         let remaining: Vec<_> = cache.drain().skip(self.limit / 2).collect();
         for (k, v) in remaining {

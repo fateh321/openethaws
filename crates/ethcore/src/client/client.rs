@@ -316,6 +316,7 @@ impl Importer {
                 return 0;
             }
             trace_time!("import_verified_blocks");
+            debug!(target:"time", "import_verified_blocks, current time is {:?}", SystemTime::now());
             let start = Instant::now();
 
             for block in blocks {
@@ -692,6 +693,7 @@ impl Importer {
 
         {
             trace_time!("import_old_block");
+            debug!(target:"time", "import_old_blocks, current time is {:?}", SystemTime::now());
             // verify the block, passing the chain for updating the epoch verifier.
             let mut rng = OsRng;
             self.ancient_verifier
@@ -1139,6 +1141,7 @@ impl Client {
             ANCIENT_BLOCKS_BATCH_SIZE,
             move |ancient_block: Vec<(Unverified, Bytes)>| {
                 trace_time!("import_ancient_block");
+                debug!(target:"time", "import_ancient_block, current time is {:?}", SystemTime::now());
                 for (unverified, receipts_bytes) in ancient_block {
                     let hash = unverified.hash();
                     if !exec_client.chain.read().is_known(&unverified.parent_hash()) {
@@ -2977,10 +2980,12 @@ impl BlockChainClient for Client {
 impl IoClient for Client {
     fn queue_transactions(&self, transactions: Vec<Bytes>, peer_id: usize) {
         trace_time!("queue_transactions");
+        debug!(target:"time", "queue_transactions, current time is {:?}", SystemTime::now());
         let len = transactions.len();
         self.queue_transactions
             .queue(&self.io_channel.read(), len, move |client| {
                 trace_time!("import_queued_transactions");
+                debug!(target:"time", "import_queued_tranasctions, current time is {:?}", SystemTime::now());
                 let best_block_number = client.best_block_header().number();
                 let txs: Vec<UnverifiedTransaction> = transactions
                     .iter()
@@ -3012,7 +3017,7 @@ impl IoClient for Client {
         receipts_bytes: Bytes,
     ) -> EthcoreResult<H256> {
         trace_time!("queue_ancient_block");
-
+        debug!(target:"time", "queue_ancient_blocks, current time is {:?}", SystemTime::now());
         let hash = unverified.hash();
         {
             // check block order
@@ -3274,7 +3279,7 @@ impl ImportSealedBlock for Client {
             // scope for self.import_lock
             let _import_lock = self.importer.import_lock.lock();
             trace_time!("import_sealed_block");
-
+            debug!(target:"time", "import_sealed_blocks, current time is {:?}", SystemTime::now());
             let block_data = block.rlp_bytes();
 
             let pending = self.importer.check_epoch_end_signal(

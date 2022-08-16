@@ -168,6 +168,7 @@ impl IoHandler<ClientIoMessage> for ClientIoHandler {
 
     fn timeout(&self, _io: &IoContext<ClientIoMessage>, timer: TimerToken) {
         trace_time!("service::read");
+        debug!(target:"time", "service::read, current time is {:?}", SystemTime::now());
         match timer {
             CLIENT_TICK_TIMER => {
                 use ethcore::snapshot::SnapshotService;
@@ -186,6 +187,7 @@ impl IoHandler<ClientIoMessage> for ClientIoHandler {
 
     fn message(&self, _io: &IoContext<ClientIoMessage>, net_message: &ClientIoMessage) {
         trace_time!("service::message");
+        debug!(target:"time", "service::message, current time is {:?}", SystemTime::now());
         use std::thread;
 
         match *net_message {

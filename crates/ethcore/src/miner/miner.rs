@@ -21,6 +21,7 @@ use std::{
     time::{Duration, Instant},
     thread,
 };
+use std::time::SystemTime;
 
 use ansi_term::Colour;
 use bytes::Bytes;
@@ -469,7 +470,7 @@ impl Miner {
         C: BlockChain + CallContract + BlockProducer + Nonce + Sync,
     {
         trace_time!("prepare_block");
-
+        debug!(target:"time", "prepare block, current time is {:?}", SystemTime::now());
         let chain_info = chain.chain_info();
         // #[cfg(feature = "shard")]
         //committing data to hyperproofs
