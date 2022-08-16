@@ -339,7 +339,8 @@ impl<'x> OpenBlock<'x> {
         // #[cfg(feature = "shard")]
         //here we will verify the proof if any
         let data = t.shard_proof_data();
-        if !data.is_empty(){
+
+        if !data.is_empty() && self.block.state.get_mined_status()!=Some(true) {
             debug!(target:"txn","data looks like{:?}", data);
             AggProof::resetAddressBalanceVerify(t.shard_id());
             for datum in data{
