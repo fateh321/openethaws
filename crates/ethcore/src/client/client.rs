@@ -317,7 +317,7 @@ impl Importer {
                 return 0;
             }
             trace_time!("import_verified_blocks");
-            debug!(target:"time", "import_verified_blocks, current time is {:?}", SystemTime::now());
+            debug!(target:"time", "import_verified_blocks start, current time is {:?}", SystemTime::now());
             let start = Instant::now();
 
             for block in blocks {
@@ -442,6 +442,7 @@ impl Importer {
 
         self.block_queue.resignal_verification();
         trace!(target:"block_import","Resignal verifier");
+        debug!(target:"time", "import_verified_blocks end, current time is {:?}", SystemTime::now());
         imported
     }
 
@@ -2981,12 +2982,12 @@ impl BlockChainClient for Client {
 impl IoClient for Client {
     fn queue_transactions(&self, transactions: Vec<Bytes>, peer_id: usize) {
         trace_time!("queue_transactions");
-        debug!(target:"time", "queue_transactions, current time is {:?}", SystemTime::now());
+        // debug!(target:"time", "queue_transactions, current time is {:?}", SystemTime::now());
         let len = transactions.len();
         self.queue_transactions
             .queue(&self.io_channel.read(), len, move |client| {
                 trace_time!("import_queued_transactions");
-                debug!(target:"time", "import_queued_tranasctions, current time is {:?}", SystemTime::now());
+                // debug!(target:"time", "import_queued_tranasctions, current time is {:?}", SystemTime::now());
                 let best_block_number = client.best_block_header().number();
                 let txs: Vec<UnverifiedTransaction> = transactions
                     .iter()

@@ -470,7 +470,7 @@ impl Miner {
         C: BlockChain + CallContract + BlockProducer + Nonce + Sync,
     {
         trace_time!("prepare_block");
-        debug!(target:"time", "prepare block, current time is {:?}", SystemTime::now());
+        debug!(target:"time", "prepare block start, current time is {:?}", SystemTime::now());
         let chain_info = chain.chain_info();
         // #[cfg(feature = "shard")]
         //committing data to hyperproofs
@@ -824,6 +824,7 @@ impl Miner {
         chain.import_hash_map_in_chain(block.state.export_data_hashmap_global(), block.state.export_data_hashmap_round_beginning(), block.state.export_incr_bal_round());
         debug!(target: "miner", "after importing hashmaps");
         chain.set_latest_mined_block(block.header.hash());
+        debug!(target:"time", "prepare block end, current time is {:?}", SystemTime::now());
         Some((block, original_work_hash))
     }
 
