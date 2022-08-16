@@ -16,6 +16,7 @@
 
 use parking_lot::RwLock;
 use std::{collections::HashMap, fmt, sync::Arc};
+use std::time::SystemTime;
 
 /// Generic cache implementation
 #[derive(Debug, Clone)]
