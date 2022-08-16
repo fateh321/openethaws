@@ -22,6 +22,7 @@ use std::str::FromStr;
 use keccak_hash::keccak;
 use csv::Writer;
 
+static mut AGG_STARTED: bool = false;
 static mut SHARD: u64 = 0u64;
 static mut ID: u64 = 0u64;
 static mut LASTCOMMITROUND: u64 = 999u64;
@@ -73,7 +74,15 @@ impl AggProof{
             o
         }
     }
-
+    pub fn agg_started()-> bool{
+        unsafe {
+            let o = AGG_STARTED;
+            o
+        }
+    }
+    pub fn set_agg_started(){
+        unsafe{AGG_STARTED = true;}
+    }
     pub fn get_hop_count(hop:u64)->u64{
         match hop {
             x if x==1u64  => unsafe{let o = HOPCOUNT_1;

@@ -623,7 +623,7 @@ impl Miner {
         debug!(target: "txn", "Attempting to push {} transactions.", engine_txs.len() + queue_txs.len());
         // #[cfg(feature = "shard")]
         debug!(target: "miner", "before waiting for proof");
-        let (is_proof, proof) = if !self.proof_data.read().is_empty() {match self.channel_receiver.lock().recv() {
+        let (is_proof, proof) = if !self.proof_data.read().is_empty() && AggProof::agg_started(){match self.channel_receiver.lock().recv() {
             Ok(T) => (true,T),
         _ => (false, String::new()),
         }
@@ -645,7 +645,9 @@ impl Miner {
         })
             .chain(queue_txs.into_iter().map(|tx| tx.signed().clone()))
         {
-
+            if block_number > 8 {
+                AggProof::set_agg_started();
+            }
             let start = Instant::now();
             let mut transaction = transaction.clean_shard();
             //set input block number of the transaction
@@ -792,7 +794,8 @@ impl Miner {
         }
         AggProof::updateTree(block_shard);
         let tx_new = self.channel_sender.clone();
-        if !self.proof_data.read().is_empty() {
+        if !self.proof_data.read().is_empty() && AggProof::agg_started(){
+
             thread::spawn(move || {
                 let a = match AggProof::agg(block_shard.clone()) {
                     Ok(t) => t.0,
