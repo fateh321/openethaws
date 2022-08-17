@@ -1498,7 +1498,7 @@ impl miner::MinerService for Miner {
         C: BlockChain + CallContract + BlockProducer + SealedBlockImporter + Nonce + Sync,
     {
         trace!(target: "miner", "update_sealing");
-
+        debug!(target:"time", "update-sealing best block number is {} and force is {:?}",chain.chain_info().best_block_number, force );
         // Do nothing if we don't want to force update_sealing and reseal is not required.
         // but note that `requires_reseal` updates internal state.
         if force == ForceUpdateSealing::No
