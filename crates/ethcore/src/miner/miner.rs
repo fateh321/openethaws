@@ -909,7 +909,9 @@ impl Miner {
             false
         } else {
             // sealing enabled and we don't want to sleep.
-            sealing.next_allowed_reseal = Instant::now() + self.options.reseal_min_period;
+            // sealing.next_allowed_reseal = Instant::now() + self.options.reseal_min_period;
+            //no restrictions on minimum reseal period
+            sealing.next_allowed_reseal = Instant::now();
             true
         }
     }
