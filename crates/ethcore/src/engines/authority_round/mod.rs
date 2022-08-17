@@ -1458,6 +1458,7 @@ impl IoHandler<()> for TransitionHandler {
     }
 
     fn timeout(&self, io: &IoContext<()>, timer: TimerToken) {
+        debug!(target:"time", "timeout, current time is {:?}", SystemTime::now());
         trace!(target:"auhtority round", "entering timeout");
         if timer == ENGINE_TIMEOUT_TOKEN {
             // NOTE we might be lagging by couple of steps in case the timeout
