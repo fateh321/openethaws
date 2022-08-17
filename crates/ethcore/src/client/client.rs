@@ -2022,7 +2022,7 @@ impl ImportBlock for Client {
             bail!(EthcoreErrorKind::Import(ImportErrorKind::AlreadyInChain));
         }
 
-        if (unverified.header.number() <= AggProof::get_latest_imported_block()) && unverified.header.number()>4{
+        if (unverified.header.number() <= AggProof::get_latest_imported_block()) && unverified.header.number()>5{
             debug!(target: "miner", "Bailed already block import ");
             bail!(EthcoreErrorKind::Import(ImportErrorKind::AlreadyInChain));
         }
