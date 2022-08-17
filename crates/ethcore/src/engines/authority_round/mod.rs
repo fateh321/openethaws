@@ -1634,6 +1634,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
         let our_addr = match *self.signer.read() {
             Some(ref signer) => signer.address(),
             None => {
+                debug!(target:"time", "return 2, not good");
                 warn!(target: "engine", "Not preparing block; cannot sign.");
                 return SealingState::NotReady;
             }
@@ -1641,13 +1642,16 @@ impl Engine<EthereumMachine> for AuthorityRound {
 
         let client = match self.upgrade_client_or("Not preparing block") {
             Ok(client) => client,
-            Err(_) => return SealingState::NotReady,
+            Err(_) => {
+                debug!(target:"time", "return 3, not good");
+                return SealingState::NotReady},
         };
 
         let parent = match client.as_full_client() {
             Some(full_client) => full_client.best_block_header(),
             None => {
                 debug!(target: "engine", "Not preparing block: not a full client.");
+                debug!(target:"time", "return 4, not good");
                 return SealingState::NotReady;
             }
         };
@@ -1663,6 +1667,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
                 parent.hash(),
             ) {
                 debug!(target: "engine", "Not preparing block: Unable to zoom to epoch.");
+                debug!(target:"time", "return 5, not good");
                 return SealingState::NotReady;
             }
             CowLike::Owned(epoch_manager.validators().clone())

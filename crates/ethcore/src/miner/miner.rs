@@ -1504,6 +1504,7 @@ impl miner::MinerService for Miner {
         if force == ForceUpdateSealing::No
             && !self.requires_reseal(chain.chain_info().best_block_number)
         {
+            debug!(target:"time", "return, not good");
             return;
         }
 

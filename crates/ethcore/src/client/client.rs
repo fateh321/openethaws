@@ -3357,6 +3357,7 @@ impl ::miner::BlockChainClient for Client {}
 
 impl super::traits::EngineClient for Client {
     fn update_sealing(&self, force: ForceUpdateSealing) {
+        debug!(target:"time", "entering update sealings",);
         self.importer.miner.update_sealing(self, force)
     }
 
