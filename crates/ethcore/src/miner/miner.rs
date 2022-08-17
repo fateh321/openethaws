@@ -857,11 +857,13 @@ impl Miner {
     fn requires_reseal(&self, best_block: BlockNumber) -> bool {
         let mut sealing = self.sealing.lock();
         if !sealing.enabled {
+            debug!(target:"time", "requires_reseal: sealing is disabled, not good.");
             trace!(target: "miner", "requires_reseal: sealing is disabled");
             return false;
         }
 
         if !sealing.reseal_allowed() {
+            debug!(target:"time", "requires_reseal: reseal too early, not good.");
             trace!(target: "miner", "requires_reseal: reseal too early");
             return false;
         }
@@ -883,6 +885,13 @@ impl Miner {
             || had_requests;
 
         let should_disable_sealing = !sealing_enabled;
+        debug!(target: "time", "requires_reseal: should_disable_sealing={}; forced={:?}, has_local={:?}, internal={:?}, had_requests={:?}",
+            should_disable_sealing,
+            self.forced_sealing(),
+            self.transaction_queue.has_local_pending_transactions(),
+            self.engine.sealing_state(),
+            had_requests,
+        );
 
         trace!(target: "miner", "requires_reseal: should_disable_sealing={}; forced={:?}, has_local={:?}, internal={:?}, had_requests={:?}",
             should_disable_sealing,
@@ -893,6 +902,7 @@ impl Miner {
         );
 
         if should_disable_sealing {
+            debug!(target: "time", "Miner sleeping (current {}, last {})", best_block, sealing.last_request.unwrap_or(0));
             trace!(target: "miner", "Miner sleeping (current {}, last {})", best_block, sealing.last_request.unwrap_or(0));
             sealing.enabled = false;
             sealing.queue.reset();
