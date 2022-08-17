@@ -44,6 +44,7 @@ use std::{
     time::{Duration, UNIX_EPOCH},
     u64,
 };
+use std::time::SystemTime;
 
 use self::finality::RollingFinality;
 use super::{
@@ -1673,6 +1674,8 @@ impl Engine<EthereumMachine> for AuthorityRound {
         //         AggProof::set_last_commit_shard(step);
         //     }
         // }
+        debug!(target:"time", "step is {} at time {:?}", step,SystemTime::now());
+
         if !is_step_proposer(&*validators, &parent.hash(), step, &our_addr) {
             trace!(target: "engine", "Not preparing block: not a proposer for step {}. (Our address: {})",
                step, our_addr);
@@ -1681,7 +1684,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
         debug!(target: "txn", "Preparing block: we are the proposer for step {}. (Our address: {})",
                step, our_addr);
 
-
+        debug!(target:"time", "prepareing block we are the proposer, current time is {:?}", SystemTime::now());
         SealingState::Ready
     }
 
