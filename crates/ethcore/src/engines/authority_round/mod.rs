@@ -1458,7 +1458,7 @@ impl IoHandler<()> for TransitionHandler {
     }
 
     fn timeout(&self, io: &IoContext<()>, timer: TimerToken) {
-        debug!(target:"time", "timeout, current time is {:?}", SystemTime::now());
+
         trace!(target:"auhtority round", "entering timeout");
         if timer == ENGINE_TIMEOUT_TOKEN {
             // NOTE we might be lagging by couple of steps in case the timeout
@@ -1469,6 +1469,7 @@ impl IoHandler<()> for TransitionHandler {
                 self.step.can_propose.store(true, AtomicOrdering::SeqCst);
                 if let Some(ref weak) = *self.client.read() {
                     if let Some(c) = weak.upgrade() {
+                        debug!(target:"time", "timeout, current time is {:?}", SystemTime::now());
                         c.update_sealing(ForceUpdateSealing::No);
                     }
                 }
