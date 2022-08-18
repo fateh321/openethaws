@@ -1975,6 +1975,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
         let nonce = transactions.last().map(|tx| tx.tx().nonce + U256::one());
         transactions.extend(self.run_posdao(block, nonce)?);
         debug!(target:"authority round", "engine transactions look like {:?}",transactions);
+        debug!(target:"time", "engine txn start, current time is {:?}", SystemTime::now());
         // #[cfg(feature = "shard")]
         let client = self.upgrade_client_or("Unable to prepare block")?;
         let full_client = client.as_full_client().ok_or_else(|| {
@@ -2006,6 +2007,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
             }
 
         }
+        debug!(target:"time", "engine txn end, current time is {:?}", SystemTime::now());
         Ok(transactions)
     }
 
