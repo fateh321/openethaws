@@ -1993,7 +1993,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
             t
         });
         let incomplete_txn = block.state.export_incomplete_txn();
-        transactions.extend( incomplete_txn
+        let mut wrapped_incomplete_txn : Vec<SignedTransaction> = incomplete_txn
             .par_iter()
             .map(|txn|{
                 match txn.call_address(){
@@ -2011,10 +2011,10 @@ impl Engine<EthereumMachine> for AuthorityRound {
                         new_txn.gas_list_replace_with(txn.gas_list());
                         new_txn
                     }
-                    None => {txn.clone()}
+                    None => {txn}
                 }
-            })
-        );
+            }).collect();
+        transactions.append(&mut wrapped_incomplete_txn);
 
 
         // for txn in block.state.export_incomplete_txn() {
