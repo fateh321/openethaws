@@ -160,7 +160,9 @@ impl txpool::Listener<Transaction> for LocalTransactionsList {
         if !tx.priority().is_local() {
             return;
         }
-
+        if tx.pending().transaction.is_engine() {
+            return;
+        }
         debug!(target: "own_tx", "Imported to the pool (hash {:?})", tx.hash());
         self.clear_old();
         self.insert(*tx.hash(), Status::Pending(tx.clone()));
@@ -188,7 +190,9 @@ impl txpool::Listener<Transaction> for LocalTransactionsList {
         if !tx.priority().is_local() {
             return;
         }
-
+        if tx.pending().transaction.is_engine() {
+            return;
+        }
         debug!(target: "own_tx", "Transaction rejected (hash {:?}). {}", tx.hash(), reason);
         self.insert(
             *tx.hash(),
@@ -201,7 +205,9 @@ impl txpool::Listener<Transaction> for LocalTransactionsList {
         if !tx.priority().is_local() {
             return;
         }
-
+        if tx.pending().transaction.is_engine() {
+            return;
+        }
         match new {
             Some(new) => {
                 warn!(target: "own_tx", "Transaction pushed out because of limit (hash {:?}, replacement: {:?})", tx.hash(), new.hash())
@@ -218,7 +224,9 @@ impl txpool::Listener<Transaction> for LocalTransactionsList {
         if !tx.priority().is_local() {
             return;
         }
-
+        if tx.pending().transaction.is_engine() {
+            return;
+        }
         warn!(target: "own_tx", "Transaction marked invalid (hash {:?})", tx.hash());
         self.insert(*tx.hash(), Status::Invalid(tx.clone()));
         self.clear_old();
@@ -228,7 +236,9 @@ impl txpool::Listener<Transaction> for LocalTransactionsList {
         if !tx.priority().is_local() {
             return;
         }
-
+        if tx.pending().transaction.is_engine() {
+            return;
+        }
         warn!(target: "own_tx", "Transaction canceled (hash {:?})", tx.hash());
         self.insert(*tx.hash(), Status::Canceled(tx.clone()));
         self.clear_old();
@@ -239,7 +249,9 @@ impl txpool::Listener<Transaction> for LocalTransactionsList {
             debug!(target: "txn", "returning from CULLED");
             return;
         }
-
+        if tx.pending().transaction.is_engine() {
+            return;
+        }
         let is_in_chain = self
             .in_chain
             .as_ref()

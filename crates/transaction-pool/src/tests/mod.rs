@@ -44,6 +44,9 @@ impl VerifiedTransaction for Transaction {
     fn hash(&self) -> &H256 {
         &self.hash
     }
+    fn is_engine(&self) -> bool {
+        self.is_engine()
+    }
     fn mem_usage(&self) -> usize {
         self.mem_usage
     }

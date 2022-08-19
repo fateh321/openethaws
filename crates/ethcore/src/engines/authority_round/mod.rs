@@ -1987,12 +1987,13 @@ impl Engine<EthereumMachine> for AuthorityRound {
         // let mut current_nonce = dummy_txn.tx().nonce;
         // transactions.push(dummy_txn);
         transactions.extend(full_client.create_shard_transaction(tx_request));
-        for txn in block.state.export_incomplete_txn() {
+        for mut txn in block.state.export_incomplete_txn() {
             match txn.call_address(){
                 Some(a) => {
                     // current_nonce = current_nonce.saturating_add(U256::from(1));
-                    let tx_request = TransactionRequest::call(a, txn.tx().data.clone()).gas_price(U256::zero()).gas(txn.tx().gas);
-                    let mut new_txn = full_client.create_shard_transaction(tx_request).unwrap();
+                    // let tx_request = TransactionRequest::call(a, txn.tx().data.clone()).gas_price(U256::zero()).gas(txn.tx().gas);
+                    // let mut new_txn = full_client.create_shard_transaction(tx_request).unwrap();
+                    let mut new_txn = txn.clone();
                     new_txn.set_next_shard(999u64);
                     new_txn.incr_hop_count(txn.get_hop_count()+1);
                     new_txn.set_input_block_number(txn.get_input_block_number());

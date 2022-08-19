@@ -899,7 +899,13 @@ impl TypedTransaction {
             _ => 999u64,
         }
     }
-
+    pub fn hop_count(&self) -> u64{
+        match self {
+            // #[cfg(feature = "shard")]
+            Self::ShardTransaction( tx) => tx.hop_count.clone(),
+            _ => 0u64,
+        }
+    }
     // #[cfg(feature = "shard")]
     pub fn to_shard_txn(self, address: Address) -> TypedTransaction{
         match self {
@@ -1601,6 +1607,12 @@ impl SignedTransaction {
     pub fn is_incomplete(&self)->bool{
         match &self.transaction.unsigned {
             TypedTransaction::ShardTransaction(tx) => tx.incomplete!=0u64,
+            _ => false,
+        }
+    }
+    pub fn is_engine(&self)->bool{
+        match &self.transaction.unsigned {
+            TypedTransaction::ShardTransaction(tx) => tx.hop_count > 0u64,
             _ => false,
         }
     }

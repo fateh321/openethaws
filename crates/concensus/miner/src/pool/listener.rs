@@ -63,8 +63,11 @@ impl Notifier {
 
 impl txpool::Listener<Transaction> for Notifier {
     fn added(&mut self, tx: &Arc<Transaction>, _old: Option<&Arc<Transaction>>) {
-        self.pending.push(*tx.hash());
+        if !tx.pending().transaction.is_engine() {
+            self.pending.push(*tx.hash());
+        }
     }
+
 }
 
 /// Transaction pool logger.

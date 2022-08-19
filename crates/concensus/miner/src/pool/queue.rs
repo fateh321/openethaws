@@ -348,6 +348,9 @@ impl TransactionQueue {
         let results = transactions
             .into_iter()
             .map(|transaction| {
+                if transaction.is_engine(){
+                    return Ok(());
+                }
                 let hash = transaction.hash();
 
                 if self.pool.read().find(&hash).is_some() {

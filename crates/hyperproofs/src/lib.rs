@@ -275,7 +275,7 @@ impl AggProof{
         20u64
     }
     pub fn incomplete_txn_buffer_length() -> u64{8000u64}
-    pub fn hyperproof_bits()-> u32{24u32}
+    pub fn hyperproof_bits()-> u32{18u32}
     pub fn block_data_count() -> u64 {1024u64}
     // pub fn author_shard(address: Address) -> u64 {
     //     let _s1 = Address::from_str("00bd138abd70e2f00903268f3db08f2d25677c9e").unwrap();

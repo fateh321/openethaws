@@ -91,6 +91,13 @@ pub enum Transaction {
 }
 
 impl Transaction {
+    pub fn is_engine(&self)-> bool{
+        match *self {
+            Transaction::Unverified(ref tx) => tx.unsigned.hop_count()>0,
+            Transaction::Retracted(ref tx) => tx.unsigned.hop_count()>0,
+            Transaction::Local(ref tx) => tx.transaction.is_engine(),
+        }
+    }
     /// Return transaction hash
     pub fn hash(&self) -> H256 {
         match *self {
@@ -220,7 +227,7 @@ impl<C: Client> txpool::Verifier<Transaction>
 
         let hash = tx.hash();
 
-        if self.client.transaction_already_included(&hash) {
+        if self.client.transaction_already_included(&hash) && !tx.is_engine() {
             trace!(target: "txqueue", "[{:?}] Rejected tx already in the blockchain", hash);
             bail!(transaction::Error::AlreadyImported)
         }

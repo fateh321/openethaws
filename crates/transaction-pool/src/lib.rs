@@ -108,6 +108,8 @@ pub trait VerifiedTransaction: fmt::Debug {
     /// Transaction hash
     fn hash(&self) -> &Self::Hash;
 
+    fn is_engine(&self) -> bool;
+
     /// Memory usage
     fn mem_usage(&self) -> usize;
 
