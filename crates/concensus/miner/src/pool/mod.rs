@@ -191,7 +191,9 @@ impl txpool::VerifiedTransaction for VerifiedTransaction {
     fn hash(&self) -> &H256 {
         &self.hash
     }
-
+    fn is_engine(&self) -> bool {
+        self.is_engine()
+    }
     fn mem_usage(&self) -> usize {
         self.transaction.malloc_size_of()
     }
