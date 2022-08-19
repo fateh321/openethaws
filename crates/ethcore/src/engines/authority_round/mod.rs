@@ -1989,7 +1989,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
         let mut nonce_0 : U256;
         transactions.extend({
             let t = full_client.create_shard_transaction(tx_request);
-            nonce_0 = t.unwrap().tx().nonce;
+            nonce_0 = t.clone().unwrap().tx().nonce;
             t
         });
         let incomplete_txn = block.state.export_incomplete_txn();
