@@ -1993,9 +1993,9 @@ impl Engine<EthereumMachine> for AuthorityRound {
             t
         });
         let incomplete_txn = block.state.export_incomplete_txn();
-        incomplete_txn
+        transactions.extend( incomplete_txn
             .par_iter()
-            .for_each(|txn|{
+            .map(|txn|{
                 match txn.call_address(){
                     Some(a) => {
                         // current_nonce = current_nonce.saturating_add(U256::from(1));
@@ -2009,11 +2009,13 @@ impl Engine<EthereumMachine> for AuthorityRound {
                         new_txn.hash_map_replace_with(txn.shard_data_hashmap());
                         new_txn.set_shard(txn.get_next_shard());
                         new_txn.gas_list_replace_with(txn.gas_list());
-                        transactions.push(new_txn);
+                        new_txn
                     }
-                    None => {}
+                    None => {txn}
                 }
-            });
+            })
+        );
+
 
         // for txn in block.state.export_incomplete_txn() {
         //     match txn.call_address(){
