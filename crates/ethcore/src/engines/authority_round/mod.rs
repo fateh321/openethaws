@@ -2011,7 +2011,7 @@ impl Engine<EthereumMachine> for AuthorityRound {
                         new_txn.gas_list_replace_with(txn.gas_list());
                         new_txn
                     }
-                    None => {txn}
+                    None => {txn.clone()}
                 }
             })
         );
