@@ -32,6 +32,8 @@ static mut SLOADCOUNT: u64 = 0u64;
 static mut SSTORECOUNT: u64 = 0u64;
 static mut BALREADCOUNT: u64 = 0u64;
 static mut BALWRITECOUNT: u64 = 0u64;
+static mut TOTALGAS: f32 = 0f32;
+static mut TOTALSIZE: f32 = 0f32;
 
 static mut HOPCOUNT_1: u64 = 0u64;
 static mut HOPCOUNT_2: u64 = 0u64;
@@ -68,6 +70,27 @@ impl AggProof{
             unsafe{REVERTED += 1u64;}
     }
 
+    pub fn incr_total_gas(gas:f32){
+        unsafe{TOTALGAS += gas;}
+    }
+
+    pub fn get_total_gas()-> f32{
+        unsafe {
+            let o = TOTALGAS;
+            o
+        }
+    }
+
+    pub fn incr_total_size(size:f32){
+        unsafe{TOTALSIZE += size;}
+    }
+
+    pub fn get_total_size()-> f32{
+        unsafe {
+            let o = TOTALSIZE;
+            o
+        }
+    }
     pub fn get_reverted_count()-> u64{
         unsafe {
             let o = REVERTED;

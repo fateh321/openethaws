@@ -30,7 +30,7 @@ queryParameter().then((res)=>
 	console.log("fuck you");
 	let len = keys.length;
 	console.log(len);
-	batch = 1000;
+	batch = 2000;
 	for (let i = 6*batch; i < 7*batch; i++) {
 
 		random_1 = Math.floor(Math.random() * 2); 
