@@ -25,7 +25,7 @@ queryParameter().then((res)=>
 	let len = keys.length;
 	console.log(len);
 	const t = 16000;
-	const batch = 4000;
+	const batch = 5000;
 	for (let i = 3*batch; i < 4*batch; i++) {
 
 		// if (i%batch === 0){
