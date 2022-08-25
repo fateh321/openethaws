@@ -30,7 +30,7 @@ impl Default for Options {
         Options {
             max_count: 2048,
             max_per_sender: 16,
-            max_mem_usage: 8 * 1024 * 1024,
+            max_mem_usage: 8 * 1024 * 1024*2,
         }
     }
 }
