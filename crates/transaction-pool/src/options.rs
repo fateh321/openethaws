@@ -28,7 +28,7 @@ pub struct Options {
 impl Default for Options {
     fn default() -> Self {
         Options {
-            max_count: 1024,
+            max_count: 2048,
             max_per_sender: 16,
             max_mem_usage: 8 * 1024 * 1024,
         }
