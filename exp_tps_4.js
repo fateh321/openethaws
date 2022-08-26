@@ -3,7 +3,7 @@ const csv = require('csv-parser');
 const Web3 = require('web3');
 const fs = require('fs');
 const path = require("path");
-const web3 = new Web3('http://localhost:8543');
+const web3 = new Web3('http://localhost:8544');
 // const web3 = new Web3('172.31.39.234:8541');
 
 var queryParameter = ()=> new Promise( resolve =>{
@@ -26,7 +26,7 @@ queryParameter().then((res)=>
 	console.log(len);
 	const t = 16000;
 	const batch = 4000;
-	for (let i = 3*batch; i < 4*batch; i++) {
+	for (let i = 4*batch; i < 5*batch; i++) {
 
 		// if (i%batch === 0){
 		// 	for (let j = 0; i < 1000; i++) {
