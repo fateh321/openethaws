@@ -1,6 +1,6 @@
 [parity]
 chain = "spec.json"
-base_path = "/data/ubuntu/openethaws/parity0"
+base_path = "/home/ubuntu/openethaws/parity0"
 [network]
 port = 30300
 [rpc]
