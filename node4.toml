@@ -1,6 +1,6 @@
 [parity]
 chain = "spec.json"
-base_path = "/home/srisht/dirtyjunk/openethereum/parity4"
+base_path = "/data/ubuntu/openethaws/parity4"
 [network]
 port = 30304
 [rpc]
