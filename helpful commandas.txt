@@ -15,3 +15,5 @@ eth_getTransactionReceipt
 CGO_ENABLED=1 go build -buildmode=c-shared -o libshard.so shard.go
 
 bindgen /home/srisht/libhyper/hyperproofs-go/libshard.h -o src/ffi.rs
+
+ssh -o ServerAliveInterval=60 ubuntu@3.85.95.142
