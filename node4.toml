@@ -8,3 +8,9 @@ port = 8544
 apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]
 [websockets]
 port = 8454
+[account]
+password = ["node.pwds"]
+[mining]
+engine_signer = "0x00d4f0e12020c15487b2a525abcb27de647c12de"
+reseal_on_txs = "none"
+force_sealing = true
