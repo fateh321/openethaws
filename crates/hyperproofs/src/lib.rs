@@ -229,14 +229,14 @@ impl AggProof{
                 2u64},
             x if x==_s4 => unsafe{SHARD = 3u64;
                 3u64},
-            x if x==_s5 => unsafe{SHARD = 4u64;
-                4u64},
-            x if x==_s6 => unsafe{SHARD = 5u64;
-                5u64},
-            x if x==_s7 => unsafe{SHARD = 6u64;
-                6u64},
-            x if x==_s8 => unsafe{SHARD = 7u64;
-                7u64},
+            x if x==_s5 => unsafe{SHARD = 0u64;
+                0u64},
+            x if x==_s6 => unsafe{SHARD = 1u64;
+                1u64},
+            x if x==_s7 => unsafe{SHARD = 2u64;
+                2u64},
+            x if x==_s8 => unsafe{SHARD = 3u64;
+                3u64},
             _ => unsafe{SHARD = 999u64; println!("panic!, shard not recognised");
                 999u64},
         }
