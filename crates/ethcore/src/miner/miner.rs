@@ -623,11 +623,13 @@ impl Miner {
         debug!(target: "txn", "Attempting to push {} transactions.", engine_txs.len() + queue_txs.len());
         // #[cfg(feature = "shard")]
         debug!(target: "miner", "before waiting for proof");
+        debug!(target:"time", "collecting proof start, current time is {:?}", SystemTime::now());
         let (is_proof, proof) = if !self.proof_data.read().is_empty() && AggProof::agg_started(){match self.channel_receiver.lock().recv() {
             Ok(T) => (true,T),
         _ => (false, String::new()),
         }
         }else {(false, String::new()) };
+        debug!(target:"time", "collecting proof end, current time is {:?}", SystemTime::now());
         debug!(target: "miner", "after waiting for proofs");
         for transaction in engine_txs
             .into_iter().map(|tx| if tx.call_address()==Some(Address::zero()) {
