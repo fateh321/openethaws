@@ -797,12 +797,13 @@ impl Miner {
             }
         }
         debug!(target:"time", "pushed txn end, current time is {:?}", SystemTime::now());
-        AggProof::updateTree(block_shard);
+
         let tx_new = self.channel_sender.clone();
         debug!(target:"time", "update tree end, current time is {:?}", SystemTime::now());
         if !self.proof_data.read().is_empty() && AggProof::agg_started(){
 
             thread::spawn(move || {
+                AggProof::updateTree(block_shard);
                 let a = match AggProof::agg(block_shard.clone()) {
                     Ok(t) => t.0,
                     _ => String::new(),
