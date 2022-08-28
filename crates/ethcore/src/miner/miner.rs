@@ -796,8 +796,10 @@ impl Miner {
                       },
             }
         }
+        debug!(target:"time", "pushed txn end, current time is {:?}", SystemTime::now());
         AggProof::updateTree(block_shard);
         let tx_new = self.channel_sender.clone();
+        debug!(target:"time", "update tree end, current time is {:?}", SystemTime::now());
         if !self.proof_data.read().is_empty() && AggProof::agg_started(){
 
             thread::spawn(move || {
@@ -811,7 +813,7 @@ impl Miner {
         debug!(target:"aws","proof_data looks like{:?} and txn_count looks like {}", self.proof_data.read(), tx_count);
         let elapsed = block_start.elapsed();
         debug!(target: "miner", "Pushed {} transactions in {} ms", tx_count, took_ms(&elapsed));
-
+        debug!(target:"time", "agg begin end, current time is {:?}", SystemTime::now());
         let block = match open_block.close() {
             Ok(block) => block,
             Err(err) => {
@@ -819,7 +821,7 @@ impl Miner {
                 return None;
             }
         };
-
+        debug!(target:"time", "block close end, current time is {:?}", SystemTime::now());
         {
             self.transaction_queue
                 .remove(invalid_transactions.iter(), true);
