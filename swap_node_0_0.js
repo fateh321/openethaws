@@ -33,14 +33,16 @@ queryParameter().then((res)=>
 	batch = 4000;
 	for (let i = 0; i < batch; i++) {
 
-		random_1 = Math.floor(Math.random() * 2); 
+		// random_1 = Math.floor(Math.random() * 2); 
+		random_1 = i;
 		// if (i%2 == 0){
 		if (random_1%2 == 0){
 
 		const _amountIn = 2*i+4;
 		var _amountOutMin;
 		var _path;
-		random = Math.floor(Math.random() * 2); 
+		// random = Math.floor(Math.random() * 2); 
+		random = i;
 		// if (i%2 == 0){
 		if (random%2 == 0){
 			_path = [tokenAddress2, tokenAddress1];
@@ -57,7 +59,8 @@ queryParameter().then((res)=>
 		const address = keys[i].PubKey;
 		// Contract Tx
 		var contractAddress;
-		var rand = Math.floor(Math.random() * 2); 
+		// var rand = Math.floor(Math.random() * 2); 
+		var rand = i;
 		// if (i%2 == 0){
 		if (rand%2 == 0){
 			contractAddress = contractAddress1;
@@ -107,7 +110,8 @@ queryParameter().then((res)=>
 		const address = keys[i].PubKey;
 		// Contract Tx
 		var contractAddress;
-		var rand = Math.floor(Math.random() * 2); 
+		// var rand = Math.floor(Math.random() * 2); 
+		var rand = i;
 		// if (i%2 == 0){
 		if (rand%2 == 0){
 			contractAddress = contractAddress1;

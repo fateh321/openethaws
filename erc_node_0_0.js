@@ -40,7 +40,8 @@ queryParameter().then((res)=>
 		const address = keys[i].PubKey;
 		const from_address = '0x93a88B7893FCDb130ab9209f63AB2e6854e617A1';
 		var tokenAddress;
-		var rand = Math.floor(Math.random() * 4); 
+		// var rand = Math.floor(Math.random() * 4); 
+		var rand = i; 
 		// if (i%2 == 0){
 		if (rand%4 == 0){
 			tokenAddress = tokenAddress1;
