@@ -334,13 +334,13 @@ impl Step {
                 .checked_sub(transition_step)?
                 .checked_mul(step_duration)?,
         )?;
-        Some(Duration::from_secs(
-            next_time.saturating_sub(unix_now().as_secs()),
-        ))
-        // step_duration_ in milli second
-        // Some(Duration::from_millis(
-        //     next_time.saturating_sub(unix_now().as_millis() as u64),
+        // Some(Duration::from_secs(
+        //     next_time.saturating_sub(unix_now().as_secs()),
         // ))
+        // step_duration_ in milli second
+        Some(Duration::from_millis(
+            next_time.saturating_sub(unix_now().as_millis() as u64),
+        ))
     }
 
     /// Increments the step number.
@@ -368,7 +368,9 @@ impl Step {
 
     /// Calibrates the AuRa step number according to the current time.
     fn opt_calibrate(&self) -> Option<()> {
-        let now = unix_now().as_secs();
+       // step_duration
+        let now = unix_now().as_millis() as u64;
+       //  let now = unix_now().as_secs();
         let StepDurationInfo {
             transition_step,
             transition_timestamp,
@@ -1462,17 +1464,17 @@ const ENGINE_TIMEOUT_TOKEN: TimerToken = 23;
 
 impl IoHandler<()> for TransitionHandler {
     fn initialize(&self, io: &IoContext<()>) {
-        let remaining = AsMillis::as_millis(&self.step.inner.duration_remaining());
-        io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_millis(remaining))
-            .unwrap_or_else(
-                |e| warn!(target: "engine", "Failed to start consensus step timer: {}.", e),
-            )
-        // step_duration_
-        // let remaining = AsMicros::as_micros(&self.step.inner.duration_remaining());
-        // io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_micros(remaining))
+        // let remaining = AsMillis::as_millis(&self.step.inner.duration_remaining());
+        // io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_millis(remaining))
         //     .unwrap_or_else(
         //         |e| warn!(target: "engine", "Failed to start consensus step timer: {}.", e),
         //     )
+        // step_duration_
+        let remaining = AsMicros::as_micros(&self.step.inner.duration_remaining());
+        io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_micros(remaining))
+            .unwrap_or_else(
+                |e| warn!(target: "engine", "Failed to start consensus step timer: {}.", e),
+            )
     }
 
     fn timeout(&self, io: &IoContext<()>, timer: TimerToken) {
@@ -1483,8 +1485,8 @@ impl IoHandler<()> for TransitionHandler {
             // has not been called fast enough.
             // Make sure to advance up to the actual step.
          // step_duration_
-            while AsMillis::as_millis(&self.step.inner.duration_remaining()) == 0 {
-            // while AsMicros::as_micros(&self.step.inner.duration_remaining()) == 0 {
+         //    while AsMillis::as_millis(&self.step.inner.duration_remaining()) == 0 {
+            while AsMicros::as_micros(&self.step.inner.duration_remaining()) == 0 {
                 self.step.inner.increment();
                 self.step.can_propose.store(true, AtomicOrdering::SeqCst);
                 if let Some(ref weak) = *self.client.read() {
@@ -1503,13 +1505,13 @@ impl IoHandler<()> for TransitionHandler {
             //     }
             // }
 
-            let next_run_at = Duration::from_millis(
-                AsMillis::as_millis(&self.step.inner.duration_remaining()) >> 2,
-            );
-            /// step_duration_
-            // let next_run_at = Duration::from_micros(
-            //     AsMicros::as_micros(&self.step.inner.duration_remaining()) >> 2,
+            // let next_run_at = Duration::from_millis(
+            //     AsMillis::as_millis(&self.step.inner.duration_remaining()) >> 2,
             // );
+            // step_duration_
+            let next_run_at = Duration::from_micros(
+                AsMicros::as_micros(&self.step.inner.duration_remaining()) >> 2,
+            );
             io.register_timer_once(ENGINE_TIMEOUT_TOKEN, next_run_at)
                 .unwrap_or_else(
                     |e| warn!(target: "engine", "Failed to restart consensus step timer: {}.", e),
