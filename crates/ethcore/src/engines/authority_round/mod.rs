@@ -334,8 +334,12 @@ impl Step {
                 .checked_sub(transition_step)?
                 .checked_mul(step_duration)?,
         )?;
-        Some(Duration::from_secs(
-            next_time.saturating_sub(unix_now().as_secs()),
+        // Some(Duration::from_secs(
+        //     next_time.saturating_sub(unix_now().as_secs()),
+        // ))
+        /// step_duration_ in milli second
+        Some(Duration::from_millis(
+            next_time.saturating_sub(unix_now().as_millis() as u64),
         ))
     }
 
@@ -975,7 +979,15 @@ impl AsMillis for Duration {
         self.as_secs() * 1_000 + (self.subsec_nanos() / 1_000_000) as u64
     }
 }
+trait AsMicros {
+    fn as_micros(&self) -> u64;
+}
 
+impl AsMicros for Duration {
+    fn as_micros(&self) -> u64 {
+        self.as_secs() * 1_000_000 + (self.subsec_nanos() / 1_000) as u64
+    }
+}
 // A type for storing owned or borrowed data that has a common type.
 // Useful for returning either a borrow or owned data from a function.
 enum CowLike<'a, A: 'a + ?Sized, B> {
@@ -1450,8 +1462,13 @@ const ENGINE_TIMEOUT_TOKEN: TimerToken = 23;
 
 impl IoHandler<()> for TransitionHandler {
     fn initialize(&self, io: &IoContext<()>) {
-        let remaining = AsMillis::as_millis(&self.step.inner.duration_remaining());
-        io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_millis(remaining))
+        // let remaining = AsMillis::as_millis(&self.step.inner.duration_remaining());
+        // io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_millis(remaining))
+        //     .unwrap_or_else(
+        //         |e| warn!(target: "engine", "Failed to start consensus step timer: {}.", e),
+        //     )
+        let remaining = AsMicros::as_micros(&self.step.inner.duration_remaining());
+        io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_micros(remaining))
             .unwrap_or_else(
                 |e| warn!(target: "engine", "Failed to start consensus step timer: {}.", e),
             )
@@ -1464,7 +1481,8 @@ impl IoHandler<()> for TransitionHandler {
             // NOTE we might be lagging by couple of steps in case the timeout
             // has not been called fast enough.
             // Make sure to advance up to the actual step.
-            while AsMillis::as_millis(&self.step.inner.duration_remaining()) == 0 {
+            // while AsMillis::as_millis(&self.step.inner.duration_remaining()) == 0 {
+            while AsMicros::as_micros(&self.step.inner.duration_remaining()) == 0 {
                 self.step.inner.increment();
                 self.step.can_propose.store(true, AtomicOrdering::SeqCst);
                 if let Some(ref weak) = *self.client.read() {
@@ -1483,8 +1501,12 @@ impl IoHandler<()> for TransitionHandler {
             //     }
             // }
 
-            let next_run_at = Duration::from_millis(
-                AsMillis::as_millis(&self.step.inner.duration_remaining()) >> 2,
+            // let next_run_at = Duration::from_millis(
+            //     AsMillis::as_millis(&self.step.inner.duration_remaining()) >> 2,
+            // );
+            /// step_duration_
+            let next_run_at = Duration::from_micros(
+                AsMicros::as_micros(&self.step.inner.duration_remaining()) >> 2,
             );
             io.register_timer_once(ENGINE_TIMEOUT_TOKEN, next_run_at)
                 .unwrap_or_else(
