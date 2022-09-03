@@ -337,7 +337,7 @@ impl Step {
         Some(Duration::from_secs(
             next_time.saturating_sub(unix_now().as_secs()),
         ))
-        /// step_duration_ in milli second
+        // step_duration_ in milli second
         // Some(Duration::from_millis(
         //     next_time.saturating_sub(unix_now().as_millis() as u64),
         // ))
@@ -1467,7 +1467,7 @@ impl IoHandler<()> for TransitionHandler {
             .unwrap_or_else(
                 |e| warn!(target: "engine", "Failed to start consensus step timer: {}.", e),
             )
-        /// step_duration_
+        // step_duration_
         // let remaining = AsMicros::as_micros(&self.step.inner.duration_remaining());
         // io.register_timer_once(ENGINE_TIMEOUT_TOKEN, Duration::from_micros(remaining))
         //     .unwrap_or_else(
@@ -1482,7 +1482,7 @@ impl IoHandler<()> for TransitionHandler {
             // NOTE we might be lagging by couple of steps in case the timeout
             // has not been called fast enough.
             // Make sure to advance up to the actual step.
-         /// step_duration_
+         // step_duration_
             while AsMillis::as_millis(&self.step.inner.duration_remaining()) == 0 {
             // while AsMicros::as_micros(&self.step.inner.duration_remaining()) == 0 {
                 self.step.inner.increment();
