@@ -223,19 +223,19 @@ impl AggProof{
         match address {
             x if x==_s1  => unsafe{SHARD = 0u64;
             0u64},
-            x if x==_s2 => unsafe{SHARD = 0u64;
+            x if x==_s2 => unsafe{SHARD = 1u64;
                 1u64},
-            x if x==_s3 => unsafe{SHARD = 0u64;
+            x if x==_s3 => unsafe{SHARD = 2u64;
                 2u64},
-            x if x==_s4 => unsafe{SHARD = 0u64;
+            x if x==_s4 => unsafe{SHARD = 3u64;
                 3u64},
             x if x==_s5 => unsafe{SHARD = 0u64;
                 0u64},
-            x if x==_s6 => unsafe{SHARD = 0u64;
+            x if x==_s6 => unsafe{SHARD = 1u64;
                 1u64},
-            x if x==_s7 => unsafe{SHARD = 0u64;
+            x if x==_s7 => unsafe{SHARD = 2u64;
                 2u64},
-            x if x==_s8 => unsafe{SHARD = 0u64;
+            x if x==_s8 => unsafe{SHARD = 3u64;
                 3u64},
             _ => unsafe{SHARD = 999u64; println!("panic!, shard not recognised");
                 999u64},
@@ -321,7 +321,7 @@ impl AggProof{
     }
 
     pub fn shard_count() -> u64 {
-        1u64
+        4u64
     }
     pub fn node_count() -> u64 {
         8u64
@@ -330,7 +330,7 @@ impl AggProof{
         20u64
     }
     pub fn incomplete_txn_buffer_length() -> u64{16000u64}
-    pub fn hyperproof_bits()-> u32{18u32}
+    pub fn hyperproof_bits()-> u32{24u32}
     pub fn block_data_count() -> u64 {2048u64}
     // pub fn author_shard(address: Address) -> u64 {
     //     let _s1 = Address::from_str("00bd138abd70e2f00903268f3db08f2d25677c9e").unwrap();
