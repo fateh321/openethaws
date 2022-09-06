@@ -1,0 +1,16 @@
+[parity]
+chain = "spec.json"
+base_path = "/home/ubuntu/openethaws/parity12"
+[network]
+port = 30304
+[rpc]
+port = 8544
+apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]
+[websockets]
+port = 8454
+[account]
+password = ["node.pwds"]
+[mining]
+engine_signer = "0x00c3ca2fd819f4d2ea30c9fd99bf80c7c86f1f25"
+reseal_on_txs = "none"
+force_sealing = true

@@ -220,6 +220,14 @@ impl AggProof{
         let _s6 = Address::from_str("001f477a48a01d2561e324f874782b2dd8167772").unwrap();
         let _s7 = Address::from_str("006137d98307ab6691ccedb7a10b295da8ae1035").unwrap();
         let _s8 = Address::from_str("003f3b1f635b2dd9a4518c33098e5f72214d6a1e").unwrap();
+        let _s9 = Address::from_str("008272a8cfd2d3d0f3edc823b1bb729cb73f09db").unwrap();
+        let _s10 = Address::from_str("001ce0f63558e2fe10806d132d64d2b2f63ef64e").unwrap();
+        let _s11 = Address::from_str("0038658156bcb555c1aa24d1adabb57c36fbcd6d").unwrap();
+        let _s12 = Address::from_str("006a8e26c9653d22f1cadb22a81428deaa8554be").unwrap();
+        let _s13 = Address::from_str("00c3ca2fd819f4d2ea30c9fd99bf80c7c86f1f25").unwrap();
+        let _s14 = Address::from_str("00734b960d1edd54e50192e47acfdc8af0fbbd20").unwrap();
+        let _s15 = Address::from_str("002db24c08ed9397bc77a554e55f80d56be7b15f").unwrap();
+        let _s16 = Address::from_str("004f49d9267bce6bdefc0fe9065269fa5d24ead9").unwrap();
         match address {
             x if x==_s1  => unsafe{SHARD = 0u64;
             0u64},
@@ -237,6 +245,22 @@ impl AggProof{
                 2u64},
             x if x==_s8 => unsafe{SHARD = 3u64;
                 3u64},
+            x if x==_s9 => unsafe{SHARD = 0u64;
+                0u64},
+            x if x==_s10 => unsafe{SHARD = 1u64;
+                1u64},
+            x if x==_s11 => unsafe{SHARD = 2u64;
+                2u64},
+            x if x==_s12 => unsafe{SHARD = 3u64;
+                3u64},
+            x if x==_s13 => unsafe{SHARD = 0u64;
+                0u64},
+            x if x==_s14 => unsafe{SHARD = 1u64;
+                1u64},
+            x if x==_s15 => unsafe{SHARD = 2u64;
+                2u64},
+            x if x==_s16 => unsafe{SHARD = 3u64;
+                3u64},
             _ => unsafe{SHARD = 999u64; println!("panic!, shard not recognised");
                 999u64},
         }
@@ -251,6 +275,14 @@ impl AggProof{
         let _s6 = Address::from_str("001f477a48a01d2561e324f874782b2dd8167772").unwrap();
         let _s7 = Address::from_str("006137d98307ab6691ccedb7a10b295da8ae1035").unwrap();
         let _s8 = Address::from_str("003f3b1f635b2dd9a4518c33098e5f72214d6a1e").unwrap();
+        let _s9 = Address::from_str("008272a8cfd2d3d0f3edc823b1bb729cb73f09db").unwrap();
+        let _s10 = Address::from_str("001ce0f63558e2fe10806d132d64d2b2f63ef64e").unwrap();
+        let _s11 = Address::from_str("0038658156bcb555c1aa24d1adabb57c36fbcd6d").unwrap();
+        let _s12 = Address::from_str("006a8e26c9653d22f1cadb22a81428deaa8554be").unwrap();
+        let _s13 = Address::from_str("00c3ca2fd819f4d2ea30c9fd99bf80c7c86f1f25").unwrap();
+        let _s14 = Address::from_str("00734b960d1edd54e50192e47acfdc8af0fbbd20").unwrap();
+        let _s15 = Address::from_str("002db24c08ed9397bc77a554e55f80d56be7b15f").unwrap();
+        let _s16 = Address::from_str("004f49d9267bce6bdefc0fe9065269fa5d24ead9").unwrap();
         match address {
             x if x==_s1  => unsafe{ID = 0u64;
                 0u64},
@@ -268,6 +300,22 @@ impl AggProof{
                 6u64},
             x if x==_s8 => unsafe{ID = 7u64;
                 7u64},
+            x if x==_s9 => unsafe{ID = 8u64;
+                8u64},
+            x if x==_s10 => unsafe{ID = 9u64;
+                9u64},
+            x if x==_s11 => unsafe{ID = 10u64;
+                10u64},
+            x if x==_s12 => unsafe{ID = 11u64;
+                11u64},
+            x if x==_s13 => unsafe{ID = 12u64;
+                12u64},
+            x if x==_s14 => unsafe{ID = 13u64;
+                13u64},
+            x if x==_s15 => unsafe{ID = 14u64;
+                14u64},
+            x if x==_s16 => unsafe{ID = 15u64;
+                15u64},
             _ => unsafe{ID = 999u64; println!("panic!, id not recognised");
                 999u64},
         }
@@ -286,6 +334,14 @@ impl AggProof{
         let _s6 = Address::from_str("001f477a48a01d2561e324f874782b2dd8167772").unwrap();
         let _s7 = Address::from_str("006137d98307ab6691ccedb7a10b295da8ae1035").unwrap();
         let _s8 = Address::from_str("003f3b1f635b2dd9a4518c33098e5f72214d6a1e").unwrap();
+        let _s9 = Address::from_str("008272a8cfd2d3d0f3edc823b1bb729cb73f09db").unwrap();
+        let _s10 = Address::from_str("001ce0f63558e2fe10806d132d64d2b2f63ef64e").unwrap();
+        let _s11 = Address::from_str("0038658156bcb555c1aa24d1adabb57c36fbcd6d").unwrap();
+        let _s12 = Address::from_str("006a8e26c9653d22f1cadb22a81428deaa8554be").unwrap();
+        let _s13 = Address::from_str("00c3ca2fd819f4d2ea30c9fd99bf80c7c86f1f25").unwrap();
+        let _s14 = Address::from_str("00734b960d1edd54e50192e47acfdc8af0fbbd20").unwrap();
+        let _s15 = Address::from_str("002db24c08ed9397bc77a554e55f80d56be7b15f").unwrap();
+        let _s16 = Address::from_str("004f49d9267bce6bdefc0fe9065269fa5d24ead9").unwrap();
         match address {
            x if x==_s1  => 0u64,
             x if x==_s2 => 1u64,
@@ -295,6 +351,14 @@ impl AggProof{
             x if x==_s6 => 5u64,
             x if x==_s7 => 6u64,
             x if x==_s8 => 7u64,
+            x if x==_s9 => 8u64,
+            x if x==_s10 => 9u64,
+            x if x==_s11 => 10u64,
+            x if x==_s12 => 11u64,
+            x if x==_s13 => 12u64,
+            x if x==_s14 => 13u64,
+            x if x==_s15 => 14u64,
+            x if x==_s16 => 15u64,
             _ => 999u64,
         }
 
@@ -324,7 +388,7 @@ impl AggProof{
         4u64
     }
     pub fn node_count() -> u64 {
-        8u64
+        16u64
     }
     pub fn txn_lifetime() -> u64 {
         20u64

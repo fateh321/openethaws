@@ -460,7 +460,7 @@ impl Importer {
         // Check the block isn't so old we won't be able to enact it.
         // t_nb 7.1 check if block is older then last pruned block
         let best_block_number = client.chain.read().best_block_number();
-        if header.number() <= best_block_number && header.number()>5 {
+        if header.number() <= best_block_number && header.number()>10 {
             *already_imported = true;
             warn!(target: "client", "Block import failed for #{} ({})\nBlock is already imported (current best block: #{}).", header.number(), header.hash(), best_block_number);
             bail!("Block already imported");
@@ -602,7 +602,7 @@ impl Importer {
                 chain.data_hash_map_global.read().clone(),
                 chain.data_hash_map_round_beginning.read().clone(),
                 chain.incr_bal_round.read().clone(),
-                if parent.number() == sr.1{ sr.0} else { parent.state_root().clone() },
+                if parent.number() == sr.1 && sr.1>10{ sr.0} else { parent.state_root().clone() },
                 is_epoch_begin,
                 &mut chain.ancestry_with_metadata_iter(*header.parent_hash()),
             );
@@ -1449,7 +1449,7 @@ impl Client {
             trace!(target: "client", "header looks like {:?}", header);
             match State::from_existing(
                 self.state_db.read().boxed_clone_canon(&header.hash()),
-                if header.number() == state_root.1{ state_root.0} else { *header.state_root() },
+                if header.number() == state_root.1 && state_root.1>10{ state_root.0} else { *header.state_root() },
                 self.engine.account_start_nonce(header.number()),
                 self.factories.clone(),
             ) {
@@ -2022,7 +2022,7 @@ impl ImportBlock for Client {
             bail!(EthcoreErrorKind::Import(ImportErrorKind::AlreadyInChain));
         }
 
-        if (unverified.header.number() <= AggProof::get_latest_imported_block()) && unverified.header.number()>5{
+        if (unverified.header.number() <= AggProof::get_latest_imported_block()) && unverified.header.number()>10{
             debug!(target: "miner", "Bailed already block import ");
             bail!(EthcoreErrorKind::Import(ImportErrorKind::AlreadyInChain));
         }
@@ -3131,7 +3131,7 @@ impl PrepareOpenBlock for Client {
         //only propagate the real shard state root
         let state_root = chain.shard_state_root.read().clone();
         let sr;
-        if state_root.1 == best_header.number() && state_root.1>5{
+        if state_root.1 == best_header.number() && state_root.1>10{
             sr = state_root.0.clone();
         }else {
             sr = best_header.state_root().clone();
