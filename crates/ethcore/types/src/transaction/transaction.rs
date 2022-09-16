@@ -513,11 +513,11 @@ impl EIP1559TransactionTx {
 #[derive(Debug, Clone, Eq, PartialEq, MallocSizeOf)]
 pub struct ShardTransactionTx {
     pub transaction: Transaction,
-    pub shard : u64,
-    pub next_shard: u64,
-    pub incomplete: u64,
-    pub hop_count: u64,
-    pub input_block_number:u64,
+    pub shard : u16,
+    pub next_shard: u16,
+    pub incomplete: u8,
+    pub hop_count: u16,
+    pub input_block_number:u16,
     pub original_sender: Address,
     pub shard_data_list: ShardDataList,
     //only if there is a non-empty proof
@@ -529,7 +529,7 @@ pub struct ShardTransactionTx {
 }
 // #[cfg(feature = "shard")]
 impl ShardTransactionTx {
-    pub fn new(transaction: Transaction, shard: u64, next_shard: u64, incomplete: u64, hop_count: u64, input_block_number: u64, original_sender:Address, shard_data_list: ShardDataList, shard_proof_list:ShardProofList, gas_list:ShardProofList, shard_proof:String) -> ShardTransactionTx {
+    pub fn new(transaction: Transaction, shard: u16, next_shard: u16, incomplete: u8, hop_count: u16, input_block_number: u16, original_sender:Address, shard_data_list: ShardDataList, shard_proof_list:ShardProofList, gas_list:ShardProofList, shard_proof:String) -> ShardTransactionTx {
         ShardTransactionTx {
             transaction,
             shard,
@@ -834,14 +834,14 @@ impl TypedTransaction {
     pub fn set_shard(&mut self, shard: u64){
         match self {
             // #[cfg(feature = "shard")]
-            Self::ShardTransaction( tx) => {tx.shard = shard;},
+            Self::ShardTransaction( tx) => {tx.shard = shard as u16;},
             _ => {},
         }
     }
     pub fn set_input_block_number(&mut self, number: u64){
         match self {
             // #[cfg(feature = "shard")]
-            Self::ShardTransaction( tx) => {tx.input_block_number = number;},
+            Self::ShardTransaction( tx) => {tx.input_block_number = number as u16;},
             _ => {},
         }
     }
@@ -862,21 +862,21 @@ impl TypedTransaction {
     pub fn set_next_shard(&mut self, shard:u64){
         match self {
             // #[cfg(feature = "shard")]
-            Self::ShardTransaction( tx) => {tx.next_shard = shard;},
+            Self::ShardTransaction( tx) => {tx.next_shard = shard as u16;},
             _ => {},
         }
     }
     pub fn incr_hop_count(&mut self, delta:u64){
         match self {
             // #[cfg(feature = "shard")]
-            Self::ShardTransaction( tx) => {tx.hop_count = delta;},
+            Self::ShardTransaction( tx) => {tx.hop_count = delta as u16;},
             _ => {},
         }
     }
     pub fn set_incomplete(&mut self, status:u64){
         match self {
             // #[cfg(feature = "shard")]
-            Self::ShardTransaction( tx) => {tx.incomplete = status;},
+            Self::ShardTransaction( tx) => {tx.incomplete = status as u8;},
             _ => {},
         }
     }
@@ -895,7 +895,7 @@ impl TypedTransaction {
     pub fn shard_id(&self) -> u64{
         match self {
             // #[cfg(feature = "shard")]
-            Self::ShardTransaction( tx) => tx.shard.clone(),
+            Self::ShardTransaction( tx) => tx.shard.clone() as u64,
             _ => 999u64,
         }
     }
@@ -909,11 +909,11 @@ impl TypedTransaction {
                     Action::Create => Self::Legacy(tx),
                     _ => Self::ShardTransaction(ShardTransactionTx{
                         transaction: tx,
-                        shard: address.to_low_u64_be().rem_euclid(AggProof::shard_count()),
-                        next_shard: 999u64,
-                        incomplete: 0u64,
-                        hop_count:0u64,
-                        input_block_number: 9999u64,
+                        shard: address.to_low_u64_be().rem_euclid(AggProof::shard_count()) as u16,
+                        next_shard: 999u16,
+                        incomplete: 0u8,
+                        hop_count:0u16,
+                        input_block_number: 9999u16,
                         original_sender: address,
                         shard_data_list: HashMap::new(),
                         shard_proof_list: Vec::new(),
@@ -961,7 +961,7 @@ impl TypedTransaction {
         match self {
             // #[cfg(feature = "shard")]
             Self::ShardTransaction(mut tx) => {
-                tx.shard = shard;
+                tx.shard = shard as u16;
                 Self::ShardTransaction(tx)
             },
             _ => self,
@@ -972,8 +972,8 @@ impl TypedTransaction {
         match self {
             // #[cfg(feature = "shard")]
             Self::ShardTransaction(mut tx) => {
-                if tx.shard == 999u64 {
-                    tx.shard = address.to_low_u64_be().rem_euclid(AggProof::shard_count());
+                if tx.shard == 999u16 {
+                    tx.shard = address.to_low_u64_be().rem_euclid(AggProof::shard_count()) as u16;
                 }
                 Self::ShardTransaction(tx)
             },
@@ -1562,7 +1562,7 @@ impl SignedTransaction {
     }
     pub fn get_next_shard(&self)->u64 {
         match &self.transaction.unsigned {
-            TypedTransaction::ShardTransaction(tx) => tx.next_shard.clone(),
+            TypedTransaction::ShardTransaction(tx) => tx.next_shard.clone() as u64,
             _ => 999u64,
         }
     }
@@ -1594,13 +1594,13 @@ impl SignedTransaction {
     }
     pub fn get_hop_count(&self)->u64{
         match &self.transaction.unsigned {
-            TypedTransaction::ShardTransaction(tx) => tx.hop_count,
+            TypedTransaction::ShardTransaction(tx) => tx.hop_count as u64,
             _ => 0u64,
         }
     }
     pub fn is_incomplete(&self)->bool{
         match &self.transaction.unsigned {
-            TypedTransaction::ShardTransaction(tx) => tx.incomplete!=0u64,
+            TypedTransaction::ShardTransaction(tx) => tx.incomplete!=0u8,
             _ => false,
         }
     }
@@ -1628,7 +1628,7 @@ impl SignedTransaction {
     pub fn set_input_block_number(&mut self, number: u64){ self.transaction.unsigned.set_input_block_number(number);}
     pub fn get_input_block_number(&self)->u64{
         match &self.transaction.unsigned {
-            TypedTransaction::ShardTransaction(tx) => tx.input_block_number,
+            TypedTransaction::ShardTransaction(tx) => tx.input_block_number as u64,
             _ => 9999u64,
         }
     }
@@ -1869,11 +1869,11 @@ mod tests {
                 value: U256::from(1),
                 data: b"Hello!".to_vec(),
             },
-            999u64,
-            999u64,
-            0u64,
-            0u64,
-            999u64,
+            999u16,
+            999u16,
+            0u8,
+            0u16,
+            999u16,
             Address::zero(),
             HashMap::from([(H160::default(),U256::zero()),]),
             Vec::new(),
