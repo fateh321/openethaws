@@ -972,7 +972,7 @@ impl TypedTransaction {
         match self {
             // #[cfg(feature = "shard")]
             Self::ShardTransaction(mut tx) => {
-                if tx.shard == 999u64 {
+                if tx.shard == 999u16 {
                     tx.shard = address.to_low_u64_be().rem_euclid(AggProof::shard_count()) as u16;
                 }
                 Self::ShardTransaction(tx)
