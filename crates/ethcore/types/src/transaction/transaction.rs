@@ -562,7 +562,7 @@ impl ShardTransactionTx {
         let tx_rlp = &Rlp::new(tx);
 
         // we need to have 18 items in this list
-        if tx_rlp.item_count()? != 20 || tx_rlp.item_count()? != 19{
+        if tx_rlp.item_count()? != 20 && tx_rlp.item_count()? != 19{
             // println!("item count is {:?}",tx_rlp.item_count());
             return Err(DecoderError::RlpIncorrectListLen);
         }
