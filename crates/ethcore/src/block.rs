@@ -475,7 +475,7 @@ impl<'x> OpenBlock<'x> {
                             t.hash_map_replace_with(self.block.state.data_hashmap_txn());
                             t.set_next_shard(self.block.state.get_next_shard());
                             t.set_incomplete(1u64);
-                            // add gas consumed
+                            // add gas consumed (for transaction size purposes)
                             t.push_gas_list(self.block.header.author().clone(), U256::from(10000u64));
                         }
                     }

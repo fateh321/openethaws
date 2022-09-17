@@ -907,24 +907,36 @@ impl TypedTransaction {
             Self::Legacy( tx) => {
                 match tx.action {
                     Action::Create => Self::Legacy(tx),
-                    _ => Self::ShardTransaction(ShardTransactionTx{
-                        transaction: tx,
-                        shard: address.to_low_u64_be().rem_euclid(AggProof::shard_count()) as u16,
-                        next_shard: 999u16,
-                        incomplete: 0u8,
-                        hop_count:0u16,
-                        input_block_number: 9999u16,
-                        original_sender: address,
-                        shard_data_list: HashMap::new(),
-                        shard_proof_list: Vec::new(),
-                        gas_list: Vec::new(),
-                        shard_proof: String::new(),
-                    }),
+                    _ => Self::Legacy(tx),
                 }
             }
             _ => self,
         }
     }
+    // pub fn to_shard_txn(self, address: Address) -> TypedTransaction{
+    //     match self {
+    //         // #[cfg(feature = "shard")]
+    //         Self::Legacy( tx) => {
+    //             match tx.action {
+    //                 Action::Create => Self::Legacy(tx),
+    //                 _ => Self::ShardTransaction(ShardTransactionTx{
+    //                     transaction: tx,
+    //                     shard: address.to_low_u64_be().rem_euclid(AggProof::shard_count()) as u16,
+    //                     next_shard: 999u16,
+    //                     incomplete: 0u8,
+    //                     hop_count:0u16,
+    //                     input_block_number: 9999u16,
+    //                     original_sender: Address::zero(),
+    //                     shard_data_list: HashMap::new(),
+    //                     shard_proof_list: Vec::new(),
+    //                     gas_list: Vec::new(),
+    //                     shard_proof: String::new(),
+    //                 }),
+    //             }
+    //         }
+    //         _ => self,
+    //     }
+    // }
     // #[cfg(feature = "shard")]
     pub fn is_shard(&self) -> bool {
         match self {
@@ -1621,7 +1633,10 @@ impl SignedTransaction {
     }
     pub fn original_sender(&self) -> Address {
         match &self.transaction.unsigned {
-            TypedTransaction::ShardTransaction(tx) => tx.original_sender.clone(),
+            TypedTransaction::ShardTransaction(tx) => {let os = tx.original_sender.clone();
+            if os.is_zero() {
+                self.sender
+            } else { os }},
             _ => self.sender.clone(),
         }
     }
