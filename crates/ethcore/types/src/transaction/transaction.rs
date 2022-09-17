@@ -719,11 +719,11 @@ impl ShardTransactionTx {
         let mut stream = RlpStream::new();
 
         let list_size = if signature.is_some() {
-            if &self.original_sender.is_zero() {
+            if self.original_sender.is_zero() {
                 19
             }else { 20 }
         } else {
-            if &self.original_sender.is_zero() {
+            if self.original_sender.is_zero() {
                 16
             }else { 17 }
         };
@@ -781,7 +781,7 @@ impl ShardTransactionTx {
         }
 
         // attach original sender
-        if !&self.original_sender.is_zero() {
+        if !self.original_sender.is_zero() {
             stream.append(&self.original_sender);
         }
 
