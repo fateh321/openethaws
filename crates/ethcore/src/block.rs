@@ -614,6 +614,7 @@ impl<'x> OpenBlock<'x> {
         let gas_count = t.gas_list().len();
         if proof_count > 0 {println!("Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);}
         debug!(target:"aws","Size of the legacy version is {}B", t_rlp_legacy_size);
+        debug!(target:"aws","Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);
         self.block
             .transactions_set
             .insert(h.unwrap_or_else(|| t.hash()));
