@@ -13,6 +13,8 @@ include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 // }
 extern crate libloading as lib;
+
+use std::collections::HashMap;
 use std::thread;
 use std::ffi::{CString, CStr};
 use std::sync::mpsc;
@@ -43,7 +45,8 @@ static mut HOPCOUNT_5: u64 = 0u64;
 static mut HOPCOUNT_6: u64 = 0u64;
 static mut HOPCOUNT_7: u64 = 0u64;
 static mut REVERTED: u64 = 0u64;
-
+//vec for the verification data
+static mut VERIFICATION_DATA: Vec<Vec<(H160, U256)>> = Vec::new();
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct AggProof{
     pub proof: String,
@@ -55,6 +58,19 @@ impl AggProof{
     // pub fn write(){
     //
     // }
+    pub fn push_verification_data(data: Vec<(H160, U256)>){
+        unsafe {
+            VERIFICATION_DATA.push(data);
+        }
+    }
+    pub fn pop_verification_data()-> Vec<(H160,U256)>{
+        unsafe {
+            assert!(VERIFICATION_DATA.len()>0);
+            let v = VERIFICATION_DATA[0].clone();
+            VERIFICATION_DATA.remove(0);
+            v
+        }
+    }
     pub fn incr_hop_count(hop:u64){
         match hop {
             x if x==1u64  => unsafe{HOPCOUNT_1 += 1u64;},
