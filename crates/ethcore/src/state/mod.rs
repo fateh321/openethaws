@@ -1901,7 +1901,7 @@ impl<B: Backend> State<B> {
         });
 
         Ok((
-            recorder.drain().into_iter().map(|r| r.hash.encode()).collect(),
+            recorder.drain().into_iter().map(|r| r.hash.as_bytes().to_vec()).collect(),
             account,
         ))
     }
