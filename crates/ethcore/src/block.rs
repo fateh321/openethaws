@@ -615,7 +615,7 @@ impl<'x> OpenBlock<'x> {
         if proof_count > 0 {println!("Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);}
         debug!(target:"aws","Size of the legacy version is {}B", t_rlp_legacy_size);
         debug!(target:"aws","Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);
-        let proof_len = self.block.state.prove_account(keccak(t.original_sender())).unwrap().0.len();
+        let proof_len = self.block.state.prove_account_hash(keccak(t.original_sender())).unwrap().0.len();
         println!("proof length is {}", proof_len);
         self.block
             .transactions_set

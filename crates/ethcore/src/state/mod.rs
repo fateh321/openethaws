@@ -1877,6 +1877,35 @@ impl<B: Backend> State<B> {
         ))
     }
 
+    pub fn prove_account_hash(&self, account_key: H256) -> TrieResult<(Vec<Bytes>, BasicAccount)> {
+        let mut recorder = Recorder::new();
+        let db = &self.db.as_hash_db();
+        let trie = TrieDB::new(db, &self.root)?;
+        let maybe_account: Option<BasicAccount> = {
+            let panicky_decoder = |bytes: &[u8]| {
+                ::rlp::decode(bytes).unwrap_or_else(|_| {
+                    panic!(
+                        "prove_account, could not query trie for account key={}",
+                        &account_key
+                    )
+                })
+            };
+            let query = (&mut recorder, panicky_decoder);
+            trie.get_with(account_key.as_bytes(), query)?
+        };
+        let account = maybe_account.unwrap_or_else(|| BasicAccount {
+            balance: 0.into(),
+            nonce: self.account_start_nonce,
+            code_hash: KECCAK_EMPTY,
+            storage_root: KECCAK_NULL_RLP,
+        });
+
+        Ok((
+            recorder.drain().into_iter().map(|r| r.hash.encode()).collect(),
+            account,
+        ))
+    }
+
     /// Prove an account's storage key's existence or nonexistence in the state.
     /// Returns a merkle proof of the account's storage trie.
     /// Requires a secure trie to be used for correctness.
