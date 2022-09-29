@@ -202,6 +202,9 @@ impl Ext for FakeExt {
     fn add_gas(&mut self, gas_0: u64, gas_1: u64){
 
     }
+    fn prove_storage(&self,account_key: H256,storage_key: H256,) -> Vec<Bytes>{
+        Vec::new()
+    }
     fn static_flag(&self) -> bool {
         false
     }

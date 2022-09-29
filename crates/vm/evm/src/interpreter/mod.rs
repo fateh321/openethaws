@@ -1029,7 +1029,8 @@ impl<Cost: CostType> Interpreter<Cost> {
                     ext.al_insert_storage_key(self.params.address, key);
                 } else {
                     let key = BigEndianHash::from_uint(&self.stack.pop_back());
-
+                    let proof_len = ext.prove_storage(keccak(ext.origin_address()), keccak(key)).len();
+                    println!("contract proof length is {}", proof_len);
                     // #[cfg(feature = "shard")]
                     let key_shard = AggProof::concat_hash(ext.origin_address(), key);
                     debug!(target:"aws","trying to load at key {} and key_shard {} and address {}",key, key_shard, ext.origin_address());
