@@ -204,7 +204,7 @@ impl Ext for FakeExt {
     }
     fn prove_account(&self,account_key: H256) -> Vec<Bytes>{
         Vec::new()
-    };
+    }
     fn prove_storage(&self,account_key: H256,storage_key: H256,) -> Vec<Bytes>{
         Vec::new()
     }
