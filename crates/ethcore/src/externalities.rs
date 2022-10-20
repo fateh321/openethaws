@@ -123,6 +123,9 @@ where
     fn prove_storage(&self,account_key: H256,storage_key: H256,) -> Vec<Bytes>{
         self.state.prove_storage(account_key, storage_key).unwrap().0
     }
+    fn prove_account(&self,account_key: H256) -> Vec<Bytes>{
+        self.state.prove_account(account_key).unwrap().0
+    }
     fn add_gas(&mut self, gas_0: u64, gas_1: u64){
         self.state.add_gas(gas_0, gas_1);
     }

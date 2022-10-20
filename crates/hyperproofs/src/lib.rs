@@ -36,6 +36,10 @@ static mut BALREADCOUNT: u64 = 0u64;
 static mut BALWRITECOUNT: u64 = 0u64;
 static mut TOTALGAS: f32 = 0f32;
 static mut TOTALSIZE: f32 = 0f32;
+static mut TOTALACCOUNTPROOF: u64 = 0u64;
+static mut TOTALKEYPROOF: u64 = 0u64;
+static mut TOTALACCOUNTNUM: u64 = 0u64;
+static mut TOTALKEYNUM: u64 = 0u64;
 
 static mut HOPCOUNT_1: u64 = 0u64;
 static mut HOPCOUNT_2: u64 = 0u64;
@@ -104,6 +108,47 @@ impl AggProof{
     pub fn get_total_size()-> f32{
         unsafe {
             let o = TOTALSIZE;
+            o
+        }
+    }
+    pub fn incr_total_account_proof(len:u64){
+        unsafe{TOTALACCOUNTPROOF += len;}
+    }
+
+    pub fn get_total_account_proof()-> u64{
+        unsafe {
+            let o = TOTALACCOUNTPROOF;
+            o
+        }
+    }
+
+    pub fn incr_total_key_proof(len:u64){
+        unsafe{TOTALKEYPROOF += len;}
+    }
+
+    pub fn get_total_key_proof()-> u64{
+        unsafe {
+            let o = TOTALKEYPROOF;
+            o
+        }
+    }
+    pub fn incr_total_key_num(len:u64){
+        unsafe{TOTALKEYNUM += len;}
+    }
+
+    pub fn get_total_key_num()-> u64{
+        unsafe {
+            let o = TOTALKEYNUM;
+            o
+        }
+    }
+    pub fn incr_total_account_num(len:u64){
+        unsafe{TOTALACCOUNTNUM += len;}
+    }
+
+    pub fn get_total_account_num()-> u64{
+        unsafe {
+            let o = TOTALACCOUNTNUM;
             o
         }
     }

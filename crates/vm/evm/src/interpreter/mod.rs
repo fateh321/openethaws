@@ -1029,8 +1029,8 @@ impl<Cost: CostType> Interpreter<Cost> {
                     ext.al_insert_storage_key(self.params.address, key);
                 } else {
                     let key = BigEndianHash::from_uint(&self.stack.pop_back());
-                    let proof_len = ext.prove_storage(keccak(ext.origin_address()), keccak(key)).len();
-                    println!("contract proof length is {}", proof_len);
+                    // let proof_len = ext.prove_storage(keccak(ext.origin_address()), keccak(key)).len();
+                    // println!("contract proof length is {}", proof_len);
                     // #[cfg(feature = "shard")]
                     let key_shard = AggProof::concat_hash(ext.origin_address(), key);
                     debug!(target:"aws","trying to load at key {} and key_shard {} and address {}",key, key_shard, ext.origin_address());
@@ -1042,7 +1042,16 @@ impl<Cost: CostType> Interpreter<Cost> {
                     } else {
                         if ext.origin_address().to_low_u64_be().rem_euclid(AggProof::shard_count()) == AggProof::get_shard() {
                             AggProof::incr_sload_count(1u64);
+                            let key_proof_len = ext.prove_storage(keccak(ext.origin_address()), keccak(key)).len();
 
+                            AggProof::incr_total_key_num(1u64);
+                            AggProof::incr_total_key_proof(key_proof_len as u64);
+
+                            let account_proof_len = ext.prove_account(keccak(ext.origin_address())).len();
+                            AggProof::incr_total_account_num(1u64);
+                            AggProof::incr_total_account_proof(account_proof_len as u64);
+
+                            // println!("contract proof length is {}", proof_len);
                             let word_temp = ext.storage_at(&key)?.into_uint();
                             let mut begin_round_word = ext.hash_map_beginning_storage_at(&key_shard);
                             if begin_round_word.1 {

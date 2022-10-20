@@ -615,12 +615,16 @@ impl<'x> OpenBlock<'x> {
         if proof_count > 0 {println!("Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);}
         debug!(target:"aws","Size of the legacy version is {}B", t_rlp_legacy_size);
         debug!(target:"aws","Size of the txn is {}B with {} inputs, {} proof data and {} gas list", t_rlp_size, input_count, proof_count, gas_count);
-        let mut proof_len = 0usize;
-        let proof = self.block.state.prove_account_hash(keccak(t.original_sender())).unwrap().0;
-        for l in proof.iter(){
-            proof_len += l.len();
-        }
-        println!("proof length is {}", proof_len);
+        // let mut proof_len = 0usize;
+        let account_proof_len = self.block.state.prove_account(keccak(t.original_sender())).unwrap().0.len();
+        // for l in proof.iter(){
+        //     proof_len += l.len();
+        // }
+        // println!("proof length is {}", proof_len);
+        AggProof::incr_total_account_num(1u64);
+        AggProof::incr_total_account_proof(account_proof_len as u64);
+        AggProof::incr_total_key_num(1u64);
+        AggProof::incr_total_key_proof(0u64);
         self.block
             .transactions_set
             .insert(h.unwrap_or_else(|| t.hash()));

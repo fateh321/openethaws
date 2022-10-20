@@ -390,7 +390,7 @@ impl ChainNotify for Informant<FullNodeInformantData> {
                 AggProof::incr_total_gas(gas);
                 let incr_size = size as f32 / 1024f32;
                 AggProof::incr_total_size(incr_size);
-                info!(target: "import", "Imported {} {} ({} txs, {} Kgas, {} ms, {} KiB, {} SL, {} SS, {} BR, {} BW, {} 1Hop, {} 2Hop, {} 3Hop, {} 4Hop, {} 5Hop, {} 6Hop, {} rest, {} Reverted, {} TotalGas, {} TotalSize){}",
+                info!(target: "import", "Imported {} {} ({} txs, {} Kgas, {} ms, {} KiB, {} SL, {} SS, {} BR, {} BW, {} 1Hop, {} 2Hop, {} 3Hop, {} 4Hop, {} 5Hop, {} 6Hop, {} rest, {} Reverted, {} TotalGas, {} TotalSize, {} AccountNum, {} AccountPiLen, {} KeyNum, {} KeyPiLen){}",
                     Colour::White.bold().paint(format!("#{}", header_view.number())),
                     Colour::White.bold().paint(format!("{}", header_view.hash())),
                     Colour::Yellow.bold().paint(format!("{}", block.transactions_count())),
@@ -411,6 +411,10 @@ impl ChainNotify for Informant<FullNodeInformantData> {
                     Colour::Yellow.bold().paint(format!("{}", AggProof::get_reverted_count())),
                     Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_gas())),
                     Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_size())),
+                    Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_account_num())),
+                    Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_account_proof())),
+                    Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_key_num())),
+                    Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_key_proof())),
                     if skipped > 0 {
                         format!(" + another {} block(s) containing {} tx(s)",
                             Colour::Red.bold().paint(format!("{}", skipped)),
