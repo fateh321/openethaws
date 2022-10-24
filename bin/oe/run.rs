@@ -144,7 +144,7 @@ impl crate::local_store::NodeInfo for FullNodeInfo {
 pub fn execute(cmd: RunCmd, logger: Arc<RotatingLogger>) -> Result<RunningClient, String> {
     // #[cfg(feature = "shard")]
     //here we will add initVc for shard
-    AggProof::init(0u64);
+    // AggProof::init(0u64);
     //shard is 0u64 because these addresses don't matter.
     // AggProof::pushAddressDelta(u64::from_str_radix("0001",16).unwrap().rem_euclid(2u64.pow(16)),String::from("1"),0u64);
     // AggProof::pushAddressDelta(u64::from_str_radix("0002",16).unwrap().rem_euclid(2u64.pow(16)),String::from("1"),0u64);
