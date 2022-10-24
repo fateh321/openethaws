@@ -949,7 +949,10 @@ pub(crate) fn enact(
     if block_number.rem_euclid(AggProof::node_count()) ==0{
         trace!(target:"enact", "block number is {}", block_number);
         if block_number != AggProof::get_last_commit_round(){
-            AggProof::commit(AggProof::get_shard(),0u64);
+            if AggProof::is_agg(){
+                AggProof::commit(AggProof::get_shard(),0u64);
+            }
+
             AggProof::set_last_commit_shard(block_number);
         }
     }

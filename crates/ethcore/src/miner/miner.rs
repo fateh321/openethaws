@@ -484,7 +484,10 @@ impl Miner {
                 chain.clear_incr_bal_round();
                 chain.resize_hash_map_global();
                 debug!(target: "miner", "after clearing data hashmap");
-                AggProof::commit(AggProof::get_shard(),0u64);
+                if AggProof::is_agg(){
+                    AggProof::commit(AggProof::get_shard(),0u64);
+                }
+
                 AggProof::set_last_commit_shard(block_num.clone());
             }
         }

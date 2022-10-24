@@ -144,7 +144,10 @@ impl crate::local_store::NodeInfo for FullNodeInfo {
 pub fn execute(cmd: RunCmd, logger: Arc<RotatingLogger>) -> Result<RunningClient, String> {
     // #[cfg(feature = "shard")]
     //here we will add initVc for shard
-    // AggProof::init(0u64);
+    if AggProof::is_agg(){
+        AggProof::init(0u64);
+    }
+
     //shard is 0u64 because these addresses don't matter.
     // AggProof::pushAddressDelta(u64::from_str_radix("0001",16).unwrap().rem_euclid(2u64.pow(16)),String::from("1"),0u64);
     // AggProof::pushAddressDelta(u64::from_str_radix("0002",16).unwrap().rem_euclid(2u64.pow(16)),String::from("1"),0u64);
@@ -333,9 +336,12 @@ pub fn execute(cmd: RunCmd, logger: Arc<RotatingLogger>) -> Result<RunningClient
     // do commit and update tree here
     AggProof::set_author_shard(miner.authoring_params().author.clone());
     AggProof::set_author_id(miner.authoring_params().author.clone());
-    AggProof::commit(AggProof::get_shard(), 0u64);
-    AggProof::updateTree(AggProof::get_shard());
-    AggProof::resetPrevCommit();
+    if AggProof::is_agg(){
+        AggProof::commit(AggProof::get_shard(), 0u64);
+        AggProof::updateTree(AggProof::get_shard());
+        AggProof::resetPrevCommit();
+    }
+
     // create client config
     let mut client_config = to_client_config(
         &cmd.cache_config,

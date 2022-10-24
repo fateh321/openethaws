@@ -24,6 +24,7 @@ use std::str::FromStr;
 use keccak_hash::keccak;
 use csv::Writer;
 
+static mut IS_AGG: bool = false;
 static mut AGG_STARTED: bool = false;
 static mut SHARD: u64 = 0u64;
 static mut ID: u64 = 0u64;
@@ -161,6 +162,12 @@ impl AggProof{
     pub fn agg_started()-> bool{
         unsafe {
             let o = AGG_STARTED;
+            o
+        }
+    }
+    pub fn is_agg()-> bool{
+        unsafe {
+            let o = IS_AGG;
             o
         }
     }
