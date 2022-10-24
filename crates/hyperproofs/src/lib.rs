@@ -446,10 +446,10 @@ impl AggProof{
     }
 
     pub fn shard_count() -> u64 {
-        1u64
+        4u64
     }
     pub fn node_count() -> u64 {
-        16u64
+        4u64
     }
     pub fn txn_lifetime() -> u64 {
         20u64
