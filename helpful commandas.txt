@@ -17,3 +17,9 @@ CGO_ENABLED=1 go build -buildmode=c-shared -o libshard.so shard.go
 bindgen /home/srisht/libhyper/hyperproofs-go/libshard.h -o src/ffi.rs
 
 ssh -o ServerAliveInterval=60 ubuntu@3.85.95.142
+
+
+,
+                        "0x00aa39d30f0d20ff03a22ccfc30b7efbfca597c2",
+                        "0x002e28950558fbede1a9675cb113f0bd20912019",
+                        "0x00a94ac799442fb13de8302026fd03068ba6a428"
