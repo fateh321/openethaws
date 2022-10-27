@@ -67,7 +67,7 @@ async function demo(res) {keys = res;
 		};
 
 		deploy();
-		await sleep(10) ;
+		await sleep(20) ;
 		
 
 	}
