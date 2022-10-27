@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 const abi=JSON.parse(fs.readFileSync(path.resolve(__dirname, "contract_uniswap/router/router_sol_ERC20.abi")).toString());
 
-const web3 = new Web3('http://localhost:8543');
+const web3 = new Web3('http://localhost:8540');
 const tokenAddress1 = '0x4FF947e19ab44afA198A3DdEaaeD817b4a8417FF';
 const tokenAddress2 = '0xdDa66C80C54c37d65B960AC8dFd2F0fDD2449B38';
 const tokenAddress3 = '0x8682658c7b44433Ceec0f7e8A340DFB888a35Dc9';
