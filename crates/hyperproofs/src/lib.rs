@@ -299,11 +299,11 @@ impl AggProof{
         match address {
             x if x==_s1  => unsafe{SHARD = 0u64;
             0u64},
-            x if x==_s2 => unsafe{SHARD = 1u64;
+            x if x==_s2 => unsafe{SHARD = 0u64;
                 1u64},
-            x if x==_s3 => unsafe{SHARD = 2u64;
+            x if x==_s3 => unsafe{SHARD = 0u64;
                 2u64},
-            x if x==_s4 => unsafe{SHARD = 3u64;
+            x if x==_s4 => unsafe{SHARD = 0u64;
                 3u64},
             x if x==_s5 => unsafe{SHARD = 0u64;
                 0u64},
@@ -453,7 +453,7 @@ impl AggProof{
     }
 
     pub fn shard_count() -> u64 {
-        4u64
+        1u64
     }
     pub fn node_count() -> u64 {
         4u64
