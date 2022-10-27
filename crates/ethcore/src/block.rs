@@ -623,7 +623,7 @@ impl<'x> OpenBlock<'x> {
         // println!("proof length is {}", proof_len);
         AggProof::incr_total_account_num(1u64);
         AggProof::incr_total_account_proof(account_proof_len as u64);
-        AggProof::incr_total_key_num(1u64);
+        AggProof::incr_total_key_num(0u64);
         AggProof::incr_total_key_proof(0u64);
         self.block
             .transactions_set
