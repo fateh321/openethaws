@@ -27,7 +27,7 @@ async function demo(res) {keys = res;
 	let len = keys.length;
 	console.log(len);
 	const t = 16000;
-	const batch = 1000;
+	const batch = 16000;
 	for (let i = 0; i < batch; i++) {
 
 		// if (i%batch === 0){
@@ -67,7 +67,7 @@ async function demo(res) {keys = res;
 		};
 
 		deploy();
-		await sleep(20) ;
+		await sleep(10) ;
 		
 
 	}
