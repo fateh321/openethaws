@@ -287,6 +287,14 @@ impl<'x> OpenBlock<'x> {
     pub fn set_mined_status(&mut self, status: Option<bool>){
         self.block.state.set_mined_status(status);
     }
+    pub fn do_checkpoint(&mut self){
+        self.block.state.remove_first_checkpoint();
+        self.block.state.checkpoint();
+    }
+    pub fn revert_state_to_checkpoint(&mut self){
+        self.block.state.discard_checkpoint();
+        self.block.state.revert_to_checkpoint();
+    }
     pub fn set_incomplete_txn(&mut self, txn: Vec<SignedTransaction>){
         self.block.state.set_incomplete_txn(txn);
     }
@@ -338,6 +346,10 @@ impl<'x> OpenBlock<'x> {
         // let mut wtr = csv::Writer::from_writer();
         // #[cfg(feature = "shard")]
         //here we will verify the proof if any
+        if t.sender().to_low_u64_be().rem_euclid(1024u64).is_zero()  {
+            AggProof::update_state_revert(true);
+            AggProof::update_state_dormant(true);
+        }
         let data = t.shard_proof_data();
 
         if !data.is_empty() && self.block.state.get_mined_status()!=Some(true) {
@@ -950,7 +962,18 @@ pub(crate) fn enact(
         trace!(target:"enact", "block number is {}", block_number);
         if block_number != AggProof::get_last_commit_round(){
             if AggProof::is_agg(){
-                AggProof::commit(AggProof::get_shard(),0u64);
+                let mut rv= 0u64 ;
+                if AggProof::get_state_dormant() == true {
+                    rv = 1u64
+                }
+                AggProof::commit(AggProof::get_shard(),0u64, rv);
+                if block_number > 2{
+                    if AggProof::get_state_dormant() == true {
+                        AggProof::update_state_dormant(false);
+                    }
+                    b.block.state.remove_first_checkpoint();
+                    b.block.state.checkpoint();
+                }
             }
 
             AggProof::set_last_commit_shard(block_number);
@@ -972,6 +995,13 @@ pub(crate) fn enact(
     // t_nb 8.4 Push uncles to OpenBlock and check if we have more then max uncles
     for u in uncles {
         b.push_uncle(u)?;
+    }
+    if AggProof::get_state_revert(){
+
+        b.block.state.discard_checkpoint();
+        b.block.state.revert_to_checkpoint();
+        AggProof::update_state_revert(false);
+
     }
 
     // t_nb 8.5 close block

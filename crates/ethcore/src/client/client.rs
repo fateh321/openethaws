@@ -577,6 +577,17 @@ impl Importer {
             chain_wr.data_hash_map_round_beginning.write().clear();
             chain_wr.incr_bal_round.write().clear();
             let mut _h = chain_wr.data_hash_map_global.write();
+            if AggProof::get_state_dormant(){
+                if _h.len() > 1 {
+                    _h.pop();
+                    _h.pop();
+                    _h.push(HashMap::new());
+                    _h.push(HashMap::new());
+                } else if _h.len()>0 {
+                    _h.pop();
+                    _h.push(HashMap::new());
+                }
+            }
             if _h.len() == (AggProof::txn_lifetime() as usize){
                 _h.remove(0);
                 _h.push(HashMap::new());
@@ -3241,6 +3252,17 @@ impl PrepareOpenBlock for Client {
     fn resize_hash_map_global(&self) {
             let mut chain = self.chain.write();
             let mut h = chain.data_hash_map_global.write();
+            if AggProof::get_state_dormant(){
+                if _h.len() > 1 {
+                    _h.pop();
+                    _h.pop();
+                    _h.push(HashMap::new());
+                    _h.push(HashMap::new());
+                } else if _h.len()>0 {
+                    _h.pop();
+                    _h.push(HashMap::new());
+                }
+            }
             if h.len() == (AggProof::txn_lifetime() as usize) {
                 h.remove(0);
                 h.push(HashMap::new());

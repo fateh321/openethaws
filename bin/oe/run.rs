@@ -337,7 +337,7 @@ pub fn execute(cmd: RunCmd, logger: Arc<RotatingLogger>) -> Result<RunningClient
     AggProof::set_author_shard(miner.authoring_params().author.clone());
     AggProof::set_author_id(miner.authoring_params().author.clone());
     if AggProof::is_agg(){
-        AggProof::commit(AggProof::get_shard(), 0u64);
+        AggProof::commit(AggProof::get_shard(), 0u64, 0u64);
         AggProof::updateTree(AggProof::get_shard());
         AggProof::resetPrevCommit();
     }

@@ -308,6 +308,10 @@ pub fn prove_transaction_virtual<H: AsHashDB<KeccakHasher, DBValue> + Send + Syn
 /// checkpoint can be discarded with `discard_checkpoint`. All of the orignal
 /// backed-up values are moved into a parent checkpoint (if any).
 ///
+///
+/// Sharding-revert: whenever a client encounters a particular txn, it toggles the revert flag.
+/// If revert flag is true, the state will revert to the checkpoint at the beginning of the previous round.
+/// Then, the revert flag is toggled to false and dormant flag is on. This flag stops mining transactions.
 pub struct State<B> {
     db: B,
     root: H256,
@@ -656,18 +660,29 @@ impl<B: Backend> State<B> {
 
     /// Merge last checkpoint with previous.
     pub fn discard_checkpoint(&mut self) {
-        // merge with previous checkpoint
-        let last = self.checkpoints.get_mut().pop();
-        if let Some(mut checkpoint) = last {
-            if let Some(ref mut prev) = self.checkpoints.get_mut().last_mut() {
-                if prev.is_empty() {
-                    **prev = checkpoint;
-                } else {
-                    for (k, v) in checkpoint.drain() {
-                        prev.entry(k).or_insert(v);
+        let length = self.checkpoints.get_mut().len();
+        if length > 1 {
+            // merge with previous checkpoint
+            let last = self.checkpoints.get_mut().pop();
+            if let Some(mut checkpoint) = last {
+                if let Some(ref mut prev) = self.checkpoints.get_mut().last_mut() {
+                    if prev.is_empty() {
+                        **prev = checkpoint;
+                    } else {
+                        for (k, v) in checkpoint.drain() {
+                            prev.entry(k).or_insert(v);
+                        }
                     }
                 }
             }
+        }
+    }
+
+    pub fn remove_first_checkpoint(&mut self) {
+        let checkpoints = self.checkpoints.get_mut();
+        let length = checkpoints.len();
+        if length > 1 {
+            checkpoints.remove(0);
         }
     }
 

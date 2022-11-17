@@ -475,6 +475,11 @@ impl Miner {
         // #[cfg(feature = "shard")]
         //committing data to hyperproofs
         let block_num = chain_info.best_block_number+1;
+        let mut do_checkpoint = false;
+        let mut rv = 0u64;
+        if AggProof::get_state_dormant(){
+            rv = 1u64;
+        }
         if block_num.clone().rem_euclid(AggProof::node_count()) ==0 {
             trace!(target:"miner", "block number is {}", block_num.clone());
             if block_num.clone() != AggProof::get_last_commit_round(){
@@ -485,7 +490,11 @@ impl Miner {
                 chain.resize_hash_map_global();
                 debug!(target: "miner", "after clearing data hashmap");
                 if AggProof::is_agg(){
-                    AggProof::commit(AggProof::get_shard(),0u64);
+                    AggProof::commit(AggProof::get_shard(),0u64, rv);
+                    if block_num > 2 {
+                        do_checkpoint = true;
+                    }
+
                 }
 
                 AggProof::set_last_commit_shard(block_num.clone());
@@ -618,6 +627,12 @@ impl Miner {
 
         //set mined status to true in the state
         open_block.set_mined_status(Some(true));
+        if do_checkpoint{
+            open_block.do_checkpoint();
+            if AggProof::get_state_dormant(){
+                AggProof::update_state_dormant(false);
+            }
+        }
         let took_ms = |elapsed: &Duration| {
             elapsed.as_secs() * 1000 + elapsed.subsec_nanos() as u64 / 1_000_000
         };
@@ -681,11 +696,13 @@ impl Miner {
             debug!(target: "txn", "pushing txn from miner");
             let result = match match_shard {
               true =>  if (proof_data_count + 12u64) <= AggProof::block_data_count(){
-                  if transaction.get_input_block_number()+AggProof::node_count()*AggProof::txn_lifetime() >= block_number{
-                      client
-                          .verify_for_pending_block(&transaction, &open_block.header)
-                          .map_err(| e | e.into())
-                          .and_then(| _ | open_block.push_transaction(transaction, None))
+                  if (transaction.get_input_block_number()+AggProof::node_count()*AggProof::txn_lifetime() >= block_number)&&(transaction.call_address()==Some(Address::zero()) || !AggProof::get_state_dormant()) {
+
+                          client
+                              .verify_for_pending_block(&transaction, &open_block.header)
+                              .map_err(| e | e.into())
+                              .and_then(| _ | open_block.push_transaction(transaction, None))
+
                   }else {
                       // in reality, lifetime is reached but we are reusing Alreadyimported error.
                       Err(Error(ErrorKind::Transaction(transaction::Error::AlreadyImported), Default::default()))
@@ -816,6 +833,10 @@ impl Miner {
         };
         debug!(target:"aws","proof_data looks like{:?} and txn_count looks like {}", self.proof_data.read(), tx_count);
         let elapsed = block_start.elapsed();
+        if AggProof::get_state_revert() == true{
+            open_block.revert_state_to_checkpoint();
+            AggProof::update_state_revert(false);
+        }
         debug!(target: "miner", "Pushed {} transactions in {} ms", tx_count, took_ms(&elapsed));
         debug!(target:"time", "agg begin end, current time is {:?}", SystemTime::now());
         let block = match open_block.close() {

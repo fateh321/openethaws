@@ -24,6 +24,10 @@ use std::str::FromStr;
 use keccak_hash::keccak;
 use csv::Writer;
 
+// reverts the state if the flag is found to be true.
+static mut STATE_REVERT: bool = false;
+//no transaction is mined; hence empty blocks.
+static mut STATE_DORMANT: bool = false;
 static mut IS_AGG: bool = false;
 static mut AGG_STARTED: bool = false;
 static mut SHARD: u64 = 0u64;
@@ -109,6 +113,24 @@ impl AggProof{
     pub fn get_total_size()-> f32{
         unsafe {
             let o = TOTALSIZE;
+            o
+        }
+    }
+    pub fn update_state_revert(update:bool){
+        unsafe{STATE_REVERT = update;}
+    }
+    pub fn get_state_revert()-> bool{
+        unsafe {
+            let o = STATE_REVERT;
+            o
+        }
+    }
+    pub fn update_state_dormant(update:bool){
+        unsafe{STATE_DORMANT = update;}
+    }
+    pub fn get_state_dormant()-> bool{
+        unsafe {
+            let o = STATE_DORMANT;
             o
         }
     }
@@ -574,11 +596,11 @@ impl AggProof{
             }
         }
     }
-    pub fn commit(nativeShard: u64, round: u64) -> lib::Result<i64>{
+    pub fn commit(nativeShard: u64, round: u64, revert: u64) -> lib::Result<i64>{
         let lib = lib::Library::new("/data/ubuntu/libhyper/hyperproofs-go/libshard.so")?;
         unsafe {
-            let func: lib::Symbol<unsafe extern "C" fn(n: u64, r: u64) -> i64 > = lib.get(b"commitVc")?;
-            Ok(func(nativeShard,round))
+            let func: lib::Symbol<unsafe extern "C" fn(n: u64, r: u64, rv: u64) -> i64 > = lib.get(b"commitVc")?;
+            Ok(func(nativeShard,round,revert))
         }
     }
     pub fn updateTree(nativeShard: u64) -> lib::Result<i64>{
