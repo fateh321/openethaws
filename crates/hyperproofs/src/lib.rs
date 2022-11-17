@@ -28,7 +28,8 @@ use csv::Writer;
 static mut STATE_REVERT: bool = false;
 //no transaction is mined; hence empty blocks.
 static mut STATE_DORMANT: bool = false;
-static mut IS_AGG: bool = false;
+// whether hyperproofs are integrated or not
+static mut IS_AGG: bool = true;
 static mut AGG_STARTED: bool = false;
 static mut SHARD: u64 = 0u64;
 static mut ID: u64 = 0u64;
