@@ -346,7 +346,7 @@ impl<'x> OpenBlock<'x> {
         // let mut wtr = csv::Writer::from_writer();
         // #[cfg(feature = "shard")]
         //here we will verify the proof if any
-        if t.sender().to_low_u64_be().rem_euclid(1024u64).is_zero()  {
+        if t.sender().to_low_u64_be().rem_euclid(1024u64) == 0u64  {
             AggProof::update_state_revert(true);
             AggProof::update_state_dormant(true);
         }
