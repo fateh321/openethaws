@@ -665,7 +665,7 @@ impl Miner {
         })
             .chain(queue_txs.into_iter().map(|tx| tx.signed().clone()))
         {
-            if block_number > 1600 {
+            if block_number > 16 {
                 AggProof::set_agg_started();
             }
             let start = Instant::now();
