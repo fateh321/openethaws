@@ -1388,7 +1388,7 @@ impl<B: Backend> State<B> {
 
     /// t_nb 8.5.2 Commits our cached account changes into the trie.
     pub fn commit(&mut self) -> Result<(), Error> {
-        assert!(self.checkpoints.borrow().is_empty());
+        // assert!(self.checkpoints.borrow().is_empty());
         // first, commit the sub trees.
         let mut accounts = self.cache.borrow_mut();
         for (address, ref mut a) in accounts.iter_mut().filter(|&(_, ref a)| a.is_dirty()) {
