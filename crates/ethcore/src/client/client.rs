@@ -3253,14 +3253,14 @@ impl PrepareOpenBlock for Client {
             let mut chain = self.chain.write();
             let mut h = chain.data_hash_map_global.write();
             if AggProof::get_state_dormant(){
-                if _h.len() > 1 {
-                    _h.pop();
-                    _h.pop();
-                    _h.push(HashMap::new());
-                    _h.push(HashMap::new());
-                } else if _h.len()>0 {
-                    _h.pop();
-                    _h.push(HashMap::new());
+                if h.len() > 1 {
+                    h.pop();
+                    h.pop();
+                    h.push(HashMap::new());
+                    h.push(HashMap::new());
+                } else if h.len()>0 {
+                    h.pop();
+                    h.push(HashMap::new());
                 }
             }
             if h.len() == (AggProof::txn_lifetime() as usize) {
