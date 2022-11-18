@@ -55,7 +55,6 @@ use kvdb::DBValue;
 
 use ethtrie::{Result as TrieResult, TrieDB};
 use trie::{Recorder, Trie, TrieError};
-use miner::stratum::Error::Address;
 
 mod account;
 mod substate;
@@ -751,27 +750,20 @@ impl<B: Backend> State<B> {
 
     pub fn revert_to_checkpoint_shard(&mut self) {
         assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
+
         if let Some(mut checkpoint_bal) = self.checkpoint_bal.get_mut().pop() {
             for (k, v) in checkpoint_bal.drain() {
-                self.reset_balance(&k,&v);
+                self.require(&k, false)?.reset_balance(&v);
             }
         }
 
         if let Some(mut checkpoint_key) = self.checkpoint_key.get_mut().pop() {
             for (k, v) in checkpoint_key.drain() {
-                self.set_storage_revert(&k, v.0, v.1);
-                // self.set_storage(&k, v.0, v.1);
-                // self.require(&k, false)?.set_storage(v.0, v.1);
+                self.require(&k, false)?.set_storage(v.0, v.1);
             }
         }
     }
 
-    pub fn reset_balance(&mut self, a: &Address, v: &U256){
-        self.require(a, false)?.reset_balance(v);
-    }
-    pub fn set_storage_revert(&mut self, a: &Address, k: H256, v: H256){
-        self.require(a, false)?.set_storage(k, v);
-    }
     /// Revert to the last checkpoint and discard it.
     pub fn revert_to_checkpoint(&mut self) {
         if let Some(mut checkpoint) = self.checkpoints.get_mut().pop() {
