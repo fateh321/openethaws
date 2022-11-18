@@ -767,8 +767,9 @@ impl<B: Backend> State<B> {
     }
 
        pub fn reset_balance(&mut self, a: &Address, v: &U256){
-                self.require(a, false)?.reset_balance(v);
-            }
+                // self.require(a, false)?.reset_balance(v);
+           self.require(a, false).map(|mut x| x.reset_balance(v));
+       }
         pub fn set_storage_revert(&mut self, a: &Address, k: H256, v: H256){
                 self.require(a, false)?.set_storage(k, v);
         }
