@@ -753,16 +753,26 @@ impl<B: Backend> State<B> {
 
         if let Some(mut checkpoint_bal) = self.checkpoint_bal.get_mut().pop() {
             for (k, v) in checkpoint_bal.drain() {
-                self.require(&k, false)?.reset_balance(&v);
+                // self.require(&k, false)?.reset_balance(&v);
+                self.reset_balance(&k, &v);
             }
         }
 
         if let Some(mut checkpoint_key) = self.checkpoint_key.get_mut().pop() {
             for (k, v) in checkpoint_key.drain() {
-                self.require(&k, false)?.set_storage(v.0, v.1);
+                // self.require(&k, false)?.set_storage(v.0, v.1);
+            self.set_storage_revert(&k, v.0,v.1);
             }
         }
     }
+
+       pub fn reset_balance(&mut self, a: &Address, v: &U256){
+                self.require(a, false)?.reset_balance(v);
+            }
+        pub fn set_storage_revert(&mut self, a: &Address, k: H256, v: H256){
+                self.require(a, false)?.set_storage(k, v);
+        }
+
 
     /// Revert to the last checkpoint and discard it.
     pub fn revert_to_checkpoint(&mut self) {
