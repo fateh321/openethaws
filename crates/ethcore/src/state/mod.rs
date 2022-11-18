@@ -55,6 +55,7 @@ use kvdb::DBValue;
 
 use ethtrie::{Result as TrieResult, TrieDB};
 use trie::{Recorder, Trie, TrieError};
+use miner::stratum::Error::Address;
 
 mod account;
 mod substate;
@@ -749,8 +750,8 @@ impl<B: Backend> State<B> {
     }
 
     pub fn revert_to_checkpoint_shard(&mut self) {
-        // assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
-
+        assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
+        let mut account1 = self.require(&Address::zero(), false)?;
         if let Some(mut checkpoint_bal) = self.checkpoint_bal.get_mut().pop() {
             for (k, v) in checkpoint_bal.iter() {
                 let mut account = self.require(k, false)?;
