@@ -55,6 +55,7 @@ use kvdb::DBValue;
 
 use ethtrie::{Result as TrieResult, TrieDB};
 use trie::{Recorder, Trie, TrieError};
+use miner::stratum::Error::Address;
 
 mod account;
 mod substate;
@@ -753,7 +754,7 @@ impl<B: Backend> State<B> {
 
         if let Some(mut checkpoint_bal) = self.checkpoint_bal.get_mut().pop() {
             for (k, v) in checkpoint_bal.drain() {
-                let mut account = self.require(&k.clone(), false);
+                let mut account = self.require(&Address::zero(), false)?;
                 account.reset_balance(&v.clone());
             }
         }
