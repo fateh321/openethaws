@@ -291,6 +291,9 @@ pub struct BlockChain {
     pub incomplete_txn: RwLock<Vec<SignedTransaction>>,
     // This consists of any pending transactions not included in the block
     pub pending_incomplete_txn: RwLock<Vec<SignedTransaction>>,
+    // checkpoints for past 2 round for balance and key, val respectively
+    pub checkpoint_bal: RwLock<Vec<HashMap<Address,U256>>>,
+    pub checkpoint_key: RwLock<Vec<HashMap<Address,(H256,H256)>>>,
 }
 
 impl BlockProvider for BlockChain {
@@ -688,6 +691,9 @@ impl BlockChain {
             incr_bal_round: RwLock::new(HashMap::new()),
             incomplete_txn: RwLock::new(Vec::new()),
             pending_incomplete_txn: RwLock::new(Vec::new()),
+            checkpoint_bal: RwLock::new(Vec::new()),
+            checkpoint_key: RwLock::new(Vec::new()),
+
         };
 
         // load best block

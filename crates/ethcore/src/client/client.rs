@@ -610,6 +610,8 @@ impl Importer {
                 &parent,
                 last_hashes,
                 client.factories.clone(),
+                chain.checkpoint_bal.read().clone(),
+                chain.checkpoint_key.read().clone(),
                 chain.data_hash_map_global.read().clone(),
                 chain.data_hash_map_round_beginning.read().clone(),
                 chain.incr_bal_round.read().clone(),
@@ -635,6 +637,11 @@ impl Importer {
             let mut h_round_beginning = chain_wr.data_hash_map_round_beginning.write();
             let mut i_bal_round = chain_wr.incr_bal_round.write();
             let mut incomplete_txn = chain_wr.incomplete_txn.write();
+            let mut check_bal = chain_wr.checkpoint_bal.write();
+            let mut check_key = chain_wr.checkpoint_key.write();
+
+            let checkpoint_bal = locked_block.state.export_checkpoint_bal();
+            let checkpoint_key = locked_block.state.export_checkpoint_key();
             let hashmap_global = locked_block.state.export_data_hashmap_global();
             let hashmap_round_beginning = locked_block.state.export_data_hashmap_round_beginning();
             let incr_bal_round = locked_block.state.export_incr_bal_round();
@@ -647,6 +654,12 @@ impl Importer {
             }
             {
                 *i_bal_round = incr_bal_round;
+            }
+            {
+                *check_bal = checkpoint_bal;
+            }
+            {
+                *check_key = checkpoint_key;
             }
             {   // we push transactions permanently to blockchain
                 for i_t in i_txn {
@@ -3164,6 +3177,8 @@ impl PrepareOpenBlock for Client {
         )?;
         // #[cfg(feature = "shard")]
         // set the global and round_beginning hashmaps
+        open_block.set_checkpoint_bal(chain.checkpoint_bal.read().clone());
+        open_block.set_checkpoint_key(chain.checkpoint_key.read().clone());
         open_block.set_hash_map_global(chain.data_hash_map_global.read().clone());
         open_block.set_hash_map_round_beginning(chain.data_hash_map_round_beginning.read().clone());
         open_block.set_incr_bal_round(chain.incr_bal_round.read().clone());
@@ -3190,11 +3205,14 @@ impl PrepareOpenBlock for Client {
 
         Ok(open_block)
     }
-    fn import_hash_map_in_chain(&self, hash_map_global: Vec<HashMap<Address, U256>>, hash_map_round_beginning: HashMap<Address, U256>, incr_bal_round: HashMap<Address,U256>) {
+    fn import_hash_map_in_chain(&self, hash_map_global: Vec<HashMap<Address, U256>>, hash_map_round_beginning: HashMap<Address, U256>, incr_bal_round: HashMap<Address,U256>, checkpoint_bal:Vec<HashMap<Address, U256>>, checkpoint_key:Vec<HashMap<Address, (H256,H256)>>) {
         let mut chain = self.chain.write();
         let mut h_global = chain.data_hash_map_global.write();
         let mut h_round_beginning = chain.data_hash_map_round_beginning.write();
         let mut i_bal_round = chain.incr_bal_round.write();
+        let mut check_bal = chain.checkpoint_bal.write();
+        let mut check_key = chain.checkpoint_key.write();
+
         {
             *i_bal_round = incr_bal_round;
         }
@@ -3203,6 +3221,12 @@ impl PrepareOpenBlock for Client {
         }
         {
             *h_round_beginning = hash_map_round_beginning;
+        }
+        {
+            *check_bal = checkpoint_bal;
+        }
+        {
+            *check_key = checkpoint_key;
         }
 
     }
@@ -3269,6 +3293,20 @@ impl PrepareOpenBlock for Client {
             } else {
                 h.push(HashMap::new());
             }
+    }
+    fn do_checkpoint(&self) {
+        let mut chain = self.chain.write();
+        let mut check_bal = chain.checkpoint_bal.write();
+        let mut check_key = chain.checkpoint_key.write();
+        assert_eq!(check_bal.len(), check_key.len());
+        let length = check_bal.len();
+        if length > 1 {
+            check_bal.remove(0);
+            check_key.remove(0);
+        }
+
+        check_bal.push(HashMap::new());
+        check_key.push(HashMap::new());
     }
 }
 

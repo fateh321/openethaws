@@ -317,6 +317,8 @@ pub struct State<B> {
     root: H256,
     cache: RefCell<HashMap<Address, AccountEntry>>,
     // The original account is preserved in
+    checkpoint_bal: RefCell<Vec<HashMap<Address,U256>>>,
+    checkpoint_key: RefCell<Vec<HashMap<Address,(H256,H256)>>>,
     checkpoints: RefCell<Vec<HashMap<Address, Option<AccountEntry>>>>,
     account_start_nonce: U256,
     factories: Factories,
@@ -408,6 +410,8 @@ impl<B: Backend> State<B> {
             db: db,
             root: root,
             cache: RefCell::new(HashMap::new()),
+            checkpoint_bal: RefCell::new(Vec::new()),
+            checkpoint_key: RefCell::new(Vec::new()),
             checkpoints: RefCell::new(Vec::new()),
             account_start_nonce: account_start_nonce,
             factories: factories,
@@ -444,6 +448,8 @@ impl<B: Backend> State<B> {
             db: db,
             root: root,
             cache: RefCell::new(HashMap::new()),
+            checkpoint_bal: RefCell::new(Vec::new()),
+            checkpoint_key: RefCell::new(Vec::new()),
             checkpoints: RefCell::new(Vec::new()),
             account_start_nonce: account_start_nonce,
             factories: factories,
@@ -536,6 +542,12 @@ impl<B: Backend> State<B> {
     pub fn set_incomplete_txn(&mut self, t: Vec<SignedTransaction>){
         self.incomplete_txn_vec = RefCell::new(t);
     }
+    pub fn set_checkpoint_key(&mut self, h: Vec<HashMap<Address, (H256,H256)>>){
+        self.checkpoint_key = RefCell::new(h);
+    }
+    pub fn set_checkpoint_bal(&mut self, h: Vec<HashMap<Address, U256>>){
+        self.checkpoint_bal = RefCell::new(h);
+    }
     pub fn set_hash_map_global(&mut self, h: Vec<HashMap<Address, U256>>){
         self.data_hash_map_global = RefCell::new(h);
     }
@@ -559,6 +571,12 @@ impl<B: Backend> State<B> {
     }
     pub fn data_hashmap_txn(& self)->HashMap<Address, U256>{
         self.data_hash_map_txn.borrow().clone()
+    }
+    pub fn export_checkpoint_bal(&self)->Vec<HashMap<Address, U256>>{
+        self.checkpoint_bal.borrow().clone()
+    }
+    pub fn export_checkpoint_key(&self)->Vec<HashMap<Address, (H256,H256)>>{
+        self.checkpoint_key.borrow().clone()
     }
     pub fn export_data_hashmap_global(&self)->Vec<HashMap<Address, U256>>{
         self.data_hash_map_global.borrow().clone()
@@ -657,7 +675,15 @@ impl<B: Backend> State<B> {
         checkpoints.push(HashMap::new());
         index
     }
-
+    pub fn checkpoint_shard(&mut self) -> usize {
+        let checkpoint_bal = self.checkpoint_bal.get_mut();
+        let checkpoint_key = self.checkpoint_key.get_mut();
+        assert_eq!(checkpoint_key.len(), checkpoint_bal.len() );
+        let index = checkpoint_bal.len();
+        checkpoint_bal.push(HashMap::new());
+        checkpoint_key.push(HashMap::new());
+        index
+    }
     /// Merge last checkpoint with previous.
     pub fn discard_checkpoint(&mut self) {
         let length = self.checkpoints.get_mut().len();
@@ -678,11 +704,63 @@ impl<B: Backend> State<B> {
         }
     }
 
-    pub fn remove_first_checkpoint(&mut self) {
-        let checkpoints = self.checkpoints.get_mut();
-        let length = checkpoints.len();
+    pub fn discard_checkpoint_shard(&mut self) {
+        assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
+        let length = self.checkpoint_bal.get_mut().len();
         if length > 1 {
-            checkpoints.remove(0);
+            // merge with previous checkpoint
+            let last_bal = self.checkpoint_bal.get_mut().pop();
+            if let Some(mut checkpoint_bal) = last_bal {
+                if let Some(ref mut prev_bal) = self.checkpoint_bal.get_mut().last_mut() {
+                    if prev_bal.is_empty() {
+                        **prev_bal = checkpoint_bal;
+                    } else {
+                        for (k, v) in checkpoint_bal.drain() {
+                            prev_bal.entry(k).or_insert(v);
+                        }
+                    }
+                }
+            }
+
+            let last_key = self.checkpoint_key.get_mut().pop();
+            if let Some(mut checkpoint_key) = last_key {
+                if let Some(ref mut prev_key) = self.checkpoint_key.get_mut().last_mut() {
+                    if prev_key.is_empty() {
+                        **prev_key = checkpoint_key;
+                    } else {
+                        for (k, v) in checkpoint_key.drain() {
+                            prev_key.entry(k).or_insert(v);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    pub fn remove_first_checkpoint(&mut self) {
+        assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
+        let checkpoint_bal = self.checkpoint_bal.get_mut();
+        let checkpoint_key = self.checkpoint_key.get_mut();
+        let length = checkpoint_bal.len();
+        if length > 1 {
+            checkpoint_bal.remove(0);
+            checkpoint_key.remove(0);
+        }
+    }
+
+    pub fn revert_to_checkpoint_shard(&mut self) {
+        assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
+
+        if let Some(mut checkpoint_bal) = self.checkpoint_bal.get_mut().pop() {
+            for (k, v) in checkpoint_bal.drain() {
+                self.require(&k, false)?.reset_balance(&v);
+            }
+        }
+
+        if let Some(mut checkpoint_key) = self.checkpoint_key.get_mut().pop() {
+            for (k, v) in checkpoint_key.drain() {
+                self.require(&k, false)?.set_storage(v.0, v.1);
+            }
         }
     }
 
@@ -1073,7 +1151,12 @@ impl<B: Backend> State<B> {
             let is_value_transfer = !incr.is_zero();
             if is_value_transfer || (cleanup_mode == CleanupMode::ForceCreate && !self.exists(a)?) {
                 AggProof::incr_bal_write_count(1u64);
+                let old_bal = self.balance(a).unwrap_or(U256::zero());
                 self.require(a, false)?.add_balance(incr);
+                if let Some(ref mut checkpoint_bal) = self.checkpoint_bal.borrow_mut().last_mut() {
+                    checkpoint_bal.entry(*a).or_insert(old_bal);
+                }
+
             } else if let CleanupMode::TrackTouched(set) = cleanup_mode {
                 if self.exists(a)? {
                     set.insert(*a);
@@ -1118,7 +1201,13 @@ impl<B: Backend> State<B> {
             trace!(target: "state", "sub_balance({}, {}): {}", a, decr, self.balance(a)?);
             if !decr.is_zero() || !self.exists(a)? {
                 AggProof::incr_bal_write_count(1u64);
+                let old_bal = self.balance(a).unwrap_or(U256::zero());
+
                 self.require(a, false)?.sub_balance(decr);
+
+                if let Some(ref mut checkpoint_bal) = self.checkpoint_bal.borrow_mut().last_mut() {
+                    checkpoint_bal.entry(*a).or_insert(old_bal);
+                }
             }
             if let CleanupMode::TrackTouched(ref mut set) = *cleanup_mode {
                 set.insert(*a);
@@ -1175,6 +1264,12 @@ impl<B: Backend> State<B> {
     /// Mutate storage of account `a` so that it is `value` for `key`.
     pub fn set_storage(&mut self, a: &Address, key: H256, value: H256) -> TrieResult<()> {
         trace!(target: "state", "set_storage({}:{:x} to {:x})", a, key, value);
+
+        let old_val = self.storage_at(a, &key).unwrap_or(H256::zero());
+
+        if let Some(ref mut checkpoint_key) = self.checkpoint_key.borrow_mut().last_mut() {
+            checkpoint_key.entry(*a).or_insert((key, old_val));
+        }
         if self.storage_at(a, &key)? != value {
             self.require(a, false)?.set_storage(key, value)
         }
@@ -1388,7 +1483,7 @@ impl<B: Backend> State<B> {
 
     /// t_nb 8.5.2 Commits our cached account changes into the trie.
     pub fn commit(&mut self) -> Result<(), Error> {
-        // assert!(self.checkpoints.borrow().is_empty());
+        assert!(self.checkpoints.borrow().is_empty());
         // first, commit the sub trees.
         let mut accounts = self.cache.borrow_mut();
         for (address, ref mut a) in accounts.iter_mut().filter(|&(_, ref a)| a.is_dirty()) {
@@ -1985,6 +2080,9 @@ impl Clone for State<StateDB> {
         let temp_sstore_val = self.temp_sstore_val.borrow().clone();
         let temp_sstore_delta = self.temp_sstore_delta.borrow().clone();
         let incr_bal_round = self.incr_bal_round.borrow().clone();
+
+        let checkpoint_bal = self.checkpoint_bal.borrow().clone();
+        let checkpoint_key = self.checkpoint_key.borrow().clone();
         // let data_hash_map_global = {
         //     let mut data_hash_map_global: Vec<HashMap<Address, U256>> = Vec::new();
         //     for hashmap in self.data_hash_map_global.borrow().iter(){
@@ -2007,6 +2105,8 @@ impl Clone for State<StateDB> {
             db: self.db.boxed_clone(),
             root: self.root.clone(),
             cache: RefCell::new(cache),
+            checkpoint_bal: RefCell::new(checkpoint_bal),
+            checkpoint_key: RefCell::new(checkpoint_key),
             checkpoints: RefCell::new(Vec::new()),
             account_start_nonce: self.account_start_nonce.clone(),
             factories: self.factories.clone(),

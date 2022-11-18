@@ -515,6 +515,9 @@ impl Account {
         self.nonce = self.nonce.saturating_add(U256::from(1u8));
     }
 
+    pub fn reset_balance(&mut self, x: &U256) {
+        self.balance = x.clone();
+    }
     /// Increase account balance.
     pub fn add_balance(&mut self, x: &U256) {
         self.balance = self.balance.saturating_add(*x);

@@ -492,7 +492,11 @@ impl Miner {
                 if AggProof::is_agg(){
                     AggProof::commit(AggProof::get_shard(),0u64, rv);
                     if block_num > 2 {
-                        do_checkpoint = true;
+                        // do_checkpoint = true;
+                        chain.do_checkpoint();
+                        if AggProof::get_state_dormant(){
+                            AggProof::update_state_dormant(false);
+                        }
                     }
 
                 }
@@ -627,12 +631,12 @@ impl Miner {
 
         //set mined status to true in the state
         open_block.set_mined_status(Some(true));
-        if do_checkpoint{
-            open_block.do_checkpoint();
-            if AggProof::get_state_dormant(){
-                AggProof::update_state_dormant(false);
-            }
-        }
+        // if do_checkpoint{
+        //     open_block.do_checkpoint();
+        //     if AggProof::get_state_dormant(){
+        //         AggProof::update_state_dormant(false);
+        //     }
+        // }
         let took_ms = |elapsed: &Duration| {
             elapsed.as_secs() * 1000 + elapsed.subsec_nanos() as u64 / 1_000_000
         };
@@ -855,7 +859,7 @@ impl Miner {
             self.transaction_queue.penalize(senders_to_penalize.iter());
         }
         debug!(target: "miner", "before importing hashmaps");
-        chain.import_hash_map_in_chain(block.state.export_data_hashmap_global(), block.state.export_data_hashmap_round_beginning(), block.state.export_incr_bal_round());
+        chain.import_hash_map_in_chain(block.state.export_data_hashmap_global(), block.state.export_data_hashmap_round_beginning(), block.state.export_incr_bal_round(), block.state.export_checkpoint_bal(), block.state.export_checkpoint_key());
         debug!(target: "miner", "after importing hashmaps");
         chain.set_latest_mined_block(block.header.hash());
         debug!(target:"time", "prepare block end, current time is {:?}", SystemTime::now());

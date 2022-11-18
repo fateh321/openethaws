@@ -292,8 +292,8 @@ impl<'x> OpenBlock<'x> {
         self.block.state.checkpoint();
     }
     pub fn revert_state_to_checkpoint(&mut self){
-        self.block.state.discard_checkpoint();
-        self.block.state.revert_to_checkpoint();
+        self.block.state.discard_checkpoint_shard();
+        self.block.state.revert_to_checkpoint_shard();
     }
     pub fn set_incomplete_txn(&mut self, txn: Vec<SignedTransaction>){
         self.block.state.set_incomplete_txn(txn);
@@ -759,6 +759,12 @@ impl<'x> OpenBlock<'x> {
 
         Ok(LockedBlock { block: s.block })
     }
+    pub fn set_checkpoint_bal(&mut self, h: Vec<HashMap<Address,U256>>){
+        self.block.state.set_checkpoint_bal(h);
+    }
+    pub fn set_checkpoint_key(&mut self, h: Vec<HashMap<Address,(H256,H256)>>){
+        self.block.state.set_checkpoint_key(h);
+    }
     pub fn set_hash_map_global(&mut self, h: Vec<HashMap<Address,U256>>){
         self.block.state.set_hash_map_global(h);
     }
@@ -911,6 +917,8 @@ pub(crate) fn enact(
     parent: &Header,
     last_hashes: Arc<LastHashes>,
     factories: Factories,
+    checkpoint_bal: Vec<HashMap<Address, U256>>,
+    checkpoint_key: Vec<HashMap<Address, (H256,H256)>>,
     hash_map_global: Vec<HashMap<Address, U256>>,
     hash_map_round_beginning: HashMap<Address,U256>,
     incr_bal_round: HashMap<Address,U256>,
@@ -972,7 +980,7 @@ pub(crate) fn enact(
                         AggProof::update_state_dormant(false);
                     }
                     b.block.state.remove_first_checkpoint();
-                    b.block.state.checkpoint();
+                    b.block.state.checkpoint_shard();
                 }
             }
 
@@ -983,6 +991,8 @@ pub(crate) fn enact(
     //set mined status to false in the state
     // #[cfg(feature = "shard")]
     b.block.state.set_mined_status(Some(false));
+    b.block.state.set_checkpoint_bal(checkpoint_bal);
+    b.block.state.set_checkpoint_key(checkpoint_key);
     // set the hash_maps (global and beginning round)
     b.block.state.set_hash_map_global(hash_map_global);
     b.block.state.set_hash_map_round_beginning(hash_map_round_beginning);
@@ -998,8 +1008,8 @@ pub(crate) fn enact(
     }
     if AggProof::get_state_revert(){
 
-        b.block.state.discard_checkpoint();
-        b.block.state.revert_to_checkpoint();
+        b.block.state.discard_checkpoint_shard();
+        b.block.state.revert_to_checkpoint_shard();
         AggProof::update_state_revert(false);
 
     }
@@ -1018,6 +1028,8 @@ pub fn enact_verified(
     last_hashes: Arc<LastHashes>,
     factories: Factories,
     // #[cfg(feature = "shard")]
+    checkpoint_bal: Vec<HashMap<Address,U256>>,
+    checkpoint_key: Vec<HashMap<Address,(H256,H256)>>,
     hash_map_global: Vec<HashMap<Address,U256>>,
     hash_map_round_beginning: HashMap<Address, U256>,
     incr_bal_round: HashMap<Address,U256>,
@@ -1035,6 +1047,8 @@ pub fn enact_verified(
         parent,
         last_hashes,
         factories,
+        checkpoint_bal,
+        checkpoint_key,
         hash_map_global,
         hash_map_round_beginning,
         incr_bal_round,
