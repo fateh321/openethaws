@@ -749,7 +749,7 @@ impl<B: Backend> State<B> {
     }
 
     pub fn revert_to_checkpoint_shard(&mut self) {
-        assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
+        // assert_eq!(self.checkpoint_bal.get_mut().len(), self.checkpoint_key.get_mut().len());
 
         if let Some(mut checkpoint_bal) = self.checkpoint_bal.get_mut().pop() {
             for (k, v) in checkpoint_bal.iter() {
