@@ -753,8 +753,8 @@ impl<B: Backend> State<B> {
 
         if let Some(mut checkpoint_bal) = self.checkpoint_bal.get_mut().pop() {
             for (k, v) in checkpoint_bal.drain() {
-                let mut account = self.require(&k, false)?;
-                account.reset_balance(&v);
+                let mut account = self.require(&k.clone(), false)?;
+                account.reset_balance(&v.clone());
             }
         }
 
