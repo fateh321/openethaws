@@ -27,8 +27,8 @@ use csv::Writer;
 static mut revert_output_vec: Vec<(SystemTime,u64, u64, u64, u64)> = Vec::new();
 static mut EFFECTIVE_BLOCK_NUMBER: u64 = 0u64;
 static mut CONFIRMED_BLOCK_NUMBER:u64 = 0u64;
-static mut JUNK_BLOCK_NUMBER:u64 = 064;
-static mut LAST_CHECKPOINT_NUMBER: u64 = 064;
+static mut JUNK_BLOCK_NUMBER:u64 = 0u64;
+static mut LAST_CHECKPOINT_NUMBER: u64 = 0u64;
 // reverts the state if the flag is found to be true.
 static mut STATE_REVERT: bool = false;
 //no transaction is mined; hence empty blocks.
@@ -140,7 +140,7 @@ impl AggProof{
         unsafe{EFFECTIVE_BLOCK_NUMBER += b;}
     }
     pub fn decr_effective_block(b:u64){
-        unsafe{EFFECTIVE_BLOCK_NUMBER.saturating_sub( b);}
+        unsafe{EFFECTIVE_BLOCK_NUMBER = EFFECTIVE_BLOCK_NUMBER.saturating_sub( b);}
     }
     pub fn get_effective_block()-> u64{
         unsafe {
