@@ -419,7 +419,7 @@ impl ChainNotify for Informant<FullNodeInformantData> {
                 if header_view.number() == 480u64{
                     let v = AggProof::get_revert_vec();
                     for k in v.iter() {
-                        println!("{:?}, {:?}, {:?}, {:?}, {:?}", v.0, v.1, v.2, v.3, v.4);
+                        println!("{:?}, {:?}, {:?}, {:?}, {:?}", k.0, k.1, k.2, k.3, k.4);
                     }
                 }
                 info!(target: "import", "Imported {} {} ({} txs, {} Kgas, {} ms, {} KiB, {} SL, {} SS, {} BR, {} BW, {} 1Hop, {} 2Hop, {} 3Hop, {} 4Hop, {} 5Hop, {} 6Hop, {} rest, {} Reverted, {} TotalGas, {} TotalSize, {} AccountNum, {} AccountPiLen, {} KeyNum, {} KeyPiLen){}",
