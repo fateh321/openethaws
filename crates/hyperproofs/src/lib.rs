@@ -18,12 +18,17 @@ use std::collections::HashMap;
 use std::thread;
 use std::ffi::{CString, CStr};
 use std::sync::mpsc;
-use std::time::Duration;
+use std::time::{Duration, SystemTime};
 use ethereum_types::{Address, BigEndianHash, H160, H256, U256};
 use std::str::FromStr;
 use keccak_hash::keccak;
 use csv::Writer;
 
+static mut revert_output_vec: Vec<(SystemTime,u64, u64, u64, u64)> = Vec::new();
+static mut EFFECTIVE_BLOCK_NUMBER: u64 = 0u64;
+static mut CONFIRMED_BLOCK_NUMBER:u64 = 0u64;
+static mut JUNK_BLOCK_NUMBER:u64 = 064;
+static mut LAST_CHECKPOINT_NUMBER: u64 = 064;
 // reverts the state if the flag is found to be true.
 static mut STATE_REVERT: bool = false;
 //no transaction is mined; hence empty blocks.
@@ -90,6 +95,57 @@ impl AggProof{
             x if x==5u64  => unsafe{HOPCOUNT_5 += 1u64;},
             x if x==6u64  => unsafe{HOPCOUNT_6 += 1u64;},
             _  => unsafe{HOPCOUNT_7 += 1u64;},
+        }
+    }
+    pub fn push_revert_vec(b:(SystemTime, u64, u64, u64, u64)){
+        unsafe{revert_output_vec.push(b);}
+    }
+    pub fn get_revert_vec()-> Vec<(SystemTime, u64, u64, u64, u64)>{
+        unsafe {
+            let o = revert_output_vec.clone();
+            o
+        }
+    }
+    pub fn incr_junk_block(b:u64){
+        unsafe{JUNK_BLOCK_NUMBER += b;}
+    }
+
+    pub fn get_junk_block()-> u64{
+        unsafe {
+            let o = JUNK_BLOCK_NUMBER;
+            o
+        }
+    }
+    pub fn incr_checkpoint_number(b:u64){
+        unsafe{LAST_CHECKPOINT_NUMBER += b;}
+    }
+
+    pub fn get_checkpoint_number()-> u64{
+        unsafe {
+            let o = LAST_CHECKPOINT_NUMBER;
+            o
+        }
+    }
+    pub fn incr_confirmed_block(b:u64){
+        unsafe{CONFIRMED_BLOCK_NUMBER += b;}
+    }
+
+    pub fn get_confirmed_block()-> u64{
+        unsafe {
+            let o = CONFIRMED_BLOCK_NUMBER;
+            o
+        }
+    }
+    pub fn incr_effective_block(b:u64){
+        unsafe{EFFECTIVE_BLOCK_NUMBER += b;}
+    }
+    pub fn decr_effective_block(b:u64){
+        unsafe{EFFECTIVE_BLOCK_NUMBER.saturating_sub( b);}
+    }
+    pub fn get_effective_block()-> u64{
+        unsafe {
+            let o = EFFECTIVE_BLOCK_NUMBER;
+            o
         }
     }
     pub fn incr_reverted_count(){
@@ -485,7 +541,7 @@ impl AggProof{
         20u64
     }
     pub fn incomplete_txn_buffer_length() -> u64{16000u64}
-    pub fn hyperproof_bits()-> u32{16u32}
+    pub fn hyperproof_bits()-> u32{24u32}
     pub fn block_data_count() -> u64 {2048u64}
     // pub fn author_shard(address: Address) -> u64 {
     //     let _s1 = Address::from_str("00bd138abd70e2f00903268f3db08f2d25677c9e").unwrap();

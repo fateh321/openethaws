@@ -346,11 +346,19 @@ impl<'x> OpenBlock<'x> {
         // let mut wtr = csv::Writer::from_writer();
         // #[cfg(feature = "shard")]
         //here we will verify the proof if any
-        if self.header.number() == 34u64{
+        if self.header.number() == 175u64{
         // if t.sender().to_low_u64_be().rem_euclid(1024u64) == 0u64  {
             AggProof::update_state_revert(true);
             AggProof::update_state_dormant(true);
             println!("revert is {}, dormant is {}", AggProof::get_state_revert(), AggProof::get_state_dormant());
+            AggProof::decr_effective_block(31u64);
+        }
+        if self.header.number() == 378u64{
+            // if t.sender().to_low_u64_be().rem_euclid(1024u64) == 0u64  {
+            AggProof::update_state_revert(true);
+            AggProof::update_state_dormant(true);
+            println!("revert is {}, dormant is {}", AggProof::get_state_revert(), AggProof::get_state_dormant());
+            AggProof::decr_effective_block(27u64);
         }
         let data = t.shard_proof_data();
 

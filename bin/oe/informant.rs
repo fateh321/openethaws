@@ -28,6 +28,7 @@ use std::{
     },
     time::{Duration, Instant},
 };
+use std::time::SystemTime;
 
 use crate::{
     io::{IoContext, IoHandler, TimerToken},
@@ -390,6 +391,37 @@ impl ChainNotify for Informant<FullNodeInformantData> {
                 AggProof::incr_total_gas(gas);
                 let incr_size = size as f32 / 1024f32;
                 AggProof::incr_total_size(incr_size);
+                if header_view.number().rem_euclid(AggProof::node_count()) == (AggProof::node_count()-1){
+                    if header_view.number() == 31u64{
+                        AggProof::incr_confirmed_block(16u64);
+                    }
+                    if header_view.number() > 31u64{
+                        if !AggProof::get_state_dormant(){
+                            if header_view.number() >= (AggProof::get_confirmed_block() + AggProof::get_junk_block() +2*AggProof::node_count() -1){
+                                AggProof::incr_confirmed_block(AggProof::node_count());
+                            }
+                        }else {
+                            AggProof::incr_junk_block(2*AggProof::node_count());
+                        }
+                    }
+                }
+                if header_view.number() > 16u64{
+                    if header_view.number() == 17u64{
+                        AggProof::incr_effective_block(16u64);
+                    }
+                    if !AggProof::get_state_dormant(){
+                        AggProof::incr_effective_block(1u64);
+                    }
+                    let time = SystemTime::now();
+                    let b = (time, header_view.number(), AggProof::get_effective_block(), AggProof::get_confirmed_block(), AggProof::get_junk_block());
+                    AggProof::push_revert_vec(b);
+                }
+                if header_view.number() == 480u64{
+                    let v = AggProof::get_revert_vec();
+                    for k in v.iter() {
+                        println!("{:?}, {:?}, {:?}, {:?}, {:?}", v.0, v.1, v.2, v.3, v.4);
+                    }
+                }
                 info!(target: "import", "Imported {} {} ({} txs, {} Kgas, {} ms, {} KiB, {} SL, {} SS, {} BR, {} BW, {} 1Hop, {} 2Hop, {} 3Hop, {} 4Hop, {} 5Hop, {} 6Hop, {} rest, {} Reverted, {} TotalGas, {} TotalSize, {} AccountNum, {} AccountPiLen, {} KeyNum, {} KeyPiLen){}",
                     Colour::White.bold().paint(format!("#{}", header_view.number())),
                     Colour::White.bold().paint(format!("{}", header_view.hash())),
