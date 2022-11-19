@@ -496,6 +496,7 @@ impl Miner {
                         chain.do_checkpoint();
                         if AggProof::get_state_dormant(){
                             AggProof::update_state_dormant(false);
+                            println!("dormant is {}", AggProof::get_state_dormant());
                         }
                     }
 
@@ -840,6 +841,7 @@ impl Miner {
         if AggProof::get_state_revert() == true{
             open_block.revert_state_to_checkpoint();
             AggProof::update_state_revert(false);
+            println!("revert is {}", AggProof::get_state_revert());
         }
         debug!(target: "miner", "Pushed {} transactions in {} ms", tx_count, took_ms(&elapsed));
         debug!(target:"time", "agg begin end, current time is {:?}", SystemTime::now());

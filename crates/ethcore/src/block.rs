@@ -346,9 +346,11 @@ impl<'x> OpenBlock<'x> {
         // let mut wtr = csv::Writer::from_writer();
         // #[cfg(feature = "shard")]
         //here we will verify the proof if any
-        if t.sender().to_low_u64_be().rem_euclid(1024u64) == 0u64  {
+        if self.header.number() == 34u64{
+        // if t.sender().to_low_u64_be().rem_euclid(1024u64) == 0u64  {
             AggProof::update_state_revert(true);
             AggProof::update_state_dormant(true);
+            println!("revert is {}, dormant is {}", AggProof::get_state_revert(), AggProof::get_state_dormant());
         }
         let data = t.shard_proof_data();
 
@@ -978,6 +980,7 @@ pub(crate) fn enact(
                 if block_number > 2{
                     if AggProof::get_state_dormant() == true {
                         AggProof::update_state_dormant(false);
+                        println!("dormant is {}", AggProof::get_state_dormant());
                     }
                     b.block.state.remove_first_checkpoint();
                     b.block.state.checkpoint_shard();
@@ -1011,6 +1014,7 @@ pub(crate) fn enact(
         b.block.state.discard_checkpoint_shard();
         b.block.state.revert_to_checkpoint_shard();
         AggProof::update_state_revert(false);
+        println!("revert is {}", AggProof::get_state_revert());
 
     }
 
