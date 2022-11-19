@@ -686,8 +686,6 @@ impl<B: Backend> State<B> {
     }
     /// Merge last checkpoint with previous.
     pub fn discard_checkpoint(&mut self) {
-        let length = self.checkpoints.get_mut().len();
-        if length > 1 {
             // merge with previous checkpoint
             let last = self.checkpoints.get_mut().pop();
             if let Some(mut checkpoint) = last {
@@ -701,7 +699,6 @@ impl<B: Backend> State<B> {
                     }
                 }
             }
-        }
     }
 
     pub fn discard_checkpoint_shard(&mut self) {

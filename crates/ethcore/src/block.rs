@@ -287,10 +287,10 @@ impl<'x> OpenBlock<'x> {
     pub fn set_mined_status(&mut self, status: Option<bool>){
         self.block.state.set_mined_status(status);
     }
-    pub fn do_checkpoint(&mut self){
-        self.block.state.remove_first_checkpoint();
-        self.block.state.checkpoint();
-    }
+    // pub fn do_checkpoint(&mut self){
+    //     self.block.state.remove_first_checkpoint();
+    //     self.block.state.checkpoint();
+    // }
     pub fn revert_state_to_checkpoint(&mut self){
         self.block.state.discard_checkpoint_shard();
         self.block.state.revert_to_checkpoint_shard();
