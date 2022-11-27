@@ -702,9 +702,7 @@ impl Miner {
             let result = match match_shard {
               true =>  if (proof_data_count + 12u64) <= AggProof::block_data_count(){
                   if (transaction.get_input_block_number()+AggProof::node_count()*AggProof::txn_lifetime() >= block_number)&&(transaction.call_address()==Some(Address::zero()) || !AggProof::get_state_dormant()) {
-                            if transaction.call_address()!=Some(Address::zero()){
-                                AggProof::incr_balance_state_size(1u64);
-                            }
+
                           client
                               .verify_for_pending_block(&transaction, &open_block.header)
                               .map_err(| e | e.into())

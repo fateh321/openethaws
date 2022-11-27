@@ -1210,6 +1210,9 @@ impl<B: Backend> State<B> {
         if a.to_low_u64_be().rem_euclid(AggProof::shard_count()) == AggProof::get_shard() {
             trace!(target: "state", "sub_balance({}, {}): {}", a, decr, self.balance(a)?);
             if !decr.is_zero() || !self.exists(a)? {
+
+                AggProof::incr_balance_state_size(1u64);
+
                 AggProof::incr_bal_write_count(1u64);
                 let old_bal = self.balance(a).unwrap_or(U256::zero());
 
