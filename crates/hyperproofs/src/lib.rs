@@ -23,7 +23,9 @@ use ethereum_types::{Address, BigEndianHash, H160, H256, U256};
 use std::str::FromStr;
 use keccak_hash::keccak;
 use csv::Writer;
-
+//state info
+static mut BALANCE_STATE_SIZE: u64 = 0u64;
+static mut TRIE_STATE_SIZE: u64 = 0u64;
 static mut revert_output_vec: Vec<(SystemTime,u64, u64, u64, u64)> = Vec::new();
 static mut EFFECTIVE_BLOCK_NUMBER: u64 = 0u64;
 static mut CONFIRMED_BLOCK_NUMBER:u64 = 0u64;
@@ -95,6 +97,24 @@ impl AggProof{
             x if x==5u64  => unsafe{HOPCOUNT_5 += 1u64;},
             x if x==6u64  => unsafe{HOPCOUNT_6 += 1u64;},
             _  => unsafe{HOPCOUNT_7 += 1u64;},
+        }
+    }
+    pub fn incr_balance_state_size(b:u64){
+        unsafe{BALANCE_STATE_SIZE += b;}
+    }
+    pub fn get_balance_state_size()-> u64{
+        unsafe{
+            let o = BALANCE_STATE_SIZE;
+            o
+        }
+    }
+    pub fn incr_trie_state_size(b:u64){
+        unsafe{TRIE_STATE_SIZE += b;}
+    }
+    pub fn get_trie_state_size()-> u64{
+        unsafe{
+            let o = TRIE_STATE_SIZE;
+            o
         }
     }
     pub fn push_revert_vec(b:(SystemTime, u64, u64, u64, u64)){
@@ -378,35 +398,35 @@ impl AggProof{
         match address {
             x if x==_s1  => unsafe{SHARD = 0u64;
             0u64},
-            x if x==_s2 => unsafe{SHARD = 1u64;
+            x if x==_s2 => unsafe{SHARD = 0u64;
                 1u64},
-            x if x==_s3 => unsafe{SHARD = 2u64;
+            x if x==_s3 => unsafe{SHARD = 0u64;
                 2u64},
-            x if x==_s4 => unsafe{SHARD = 3u64;
+            x if x==_s4 => unsafe{SHARD = 0u64;
                 3u64},
             x if x==_s5 => unsafe{SHARD = 0u64;
                 0u64},
-            x if x==_s6 => unsafe{SHARD = 1u64;
+            x if x==_s6 => unsafe{SHARD = 0u64;
                 1u64},
-            x if x==_s7 => unsafe{SHARD = 2u64;
+            x if x==_s7 => unsafe{SHARD = 0u64;
                 2u64},
-            x if x==_s8 => unsafe{SHARD = 3u64;
+            x if x==_s8 => unsafe{SHARD = 0u64;
                 3u64},
             x if x==_s9 => unsafe{SHARD = 0u64;
                 0u64},
-            x if x==_s10 => unsafe{SHARD = 1u64;
+            x if x==_s10 => unsafe{SHARD = 0u64;
                 1u64},
-            x if x==_s11 => unsafe{SHARD = 2u64;
+            x if x==_s11 => unsafe{SHARD = 0u64;
                 2u64},
-            x if x==_s12 => unsafe{SHARD = 3u64;
+            x if x==_s12 => unsafe{SHARD = 0u64;
                 3u64},
             x if x==_s13 => unsafe{SHARD = 0u64;
                 0u64},
-            x if x==_s14 => unsafe{SHARD = 1u64;
+            x if x==_s14 => unsafe{SHARD = 0u64;
                 1u64},
-            x if x==_s15 => unsafe{SHARD = 2u64;
+            x if x==_s15 => unsafe{SHARD = 0u64;
                 2u64},
-            x if x==_s16 => unsafe{SHARD = 3u64;
+            x if x==_s16 => unsafe{SHARD = 0u64;
                 3u64},
             _ => unsafe{SHARD = 999u64; println!("panic!, shard not recognised");
                 999u64},
@@ -532,7 +552,7 @@ impl AggProof{
     }
 
     pub fn shard_count() -> u64 {
-        4u64
+        1u64
     }
     pub fn node_count() -> u64 {
         16u64

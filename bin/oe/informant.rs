@@ -416,13 +416,13 @@ impl ChainNotify for Informant<FullNodeInformantData> {
                     let b = (time, header_view.number(), AggProof::get_effective_block(), AggProof::get_confirmed_block(), AggProof::get_junk_block());
                     AggProof::push_revert_vec(b);
                 }
-                if header_view.number() == 480u64{
-                    let v = AggProof::get_revert_vec();
-                    for k in v.iter() {
-                        println!("{:?}, {:?}, {:?}, {:?}, {:?}", k.0, k.1, k.2, k.3, k.4);
-                    }
-                }
-                info!(target: "import", "Imported {} {} ({} txs, {} Kgas, {} ms, {} KiB, {} SL, {} SS, {} BR, {} BW, {} 1Hop, {} 2Hop, {} 3Hop, {} 4Hop, {} 5Hop, {} 6Hop, {} rest, {} Reverted, {} TotalGas, {} TotalSize, {} AccountNum, {} AccountPiLen, {} KeyNum, {} KeyPiLen){}",
+                // if header_view.number() == 480u64{
+                //     let v = AggProof::get_revert_vec();
+                //     for k in v.iter() {
+                //         println!("{:?}, {:?}, {:?}, {:?}, {:?}", k.0, k.1, k.2, k.3, k.4);
+                //     }
+                // }
+                info!(target: "import", "Imported {} {} ({} txs, {} Kgas, {} ms, {} KiB, {} SL, {} SS, {} BR, {} BW, {} 1Hop, {} 2Hop, {} 3Hop, {} 4Hop, {} 5Hop, {} 6Hop, {} rest, {} Reverted, {} TotalGas, {} TotalSize, {} AccountNum, {} AccountPiLen, {} KeyNum, {} KeyPiLen, {} balSize, {} trieSize){}",
                     Colour::White.bold().paint(format!("#{}", header_view.number())),
                     Colour::White.bold().paint(format!("{}", header_view.hash())),
                     Colour::Yellow.bold().paint(format!("{}", block.transactions_count())),
@@ -447,6 +447,8 @@ impl ChainNotify for Informant<FullNodeInformantData> {
                     Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_account_proof())),
                     Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_key_num())),
                     Colour::Yellow.bold().paint(format!("{}", AggProof::get_total_key_proof())),
+                    Colour::Yellow.bold().paint(format!("{}", AggProof::get_balance_state_size())),
+                    Colour::Yellow.bold().paint(format!("{}", AggProof::get_trie_state_size())),
                     if skipped > 0 {
                         format!(" + another {} block(s) containing {} tx(s)",
                             Colour::Red.bold().paint(format!("{}", skipped)),

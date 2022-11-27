@@ -1276,6 +1276,9 @@ impl<B: Backend> State<B> {
         trace!(target: "state", "set_storage({}:{:x} to {:x})", a, key, value);
 
         let old_val = self.storage_at(a, &key).unwrap_or(H256::zero());
+        if old_val.is_zero(){
+            AggProof::incr_trie_state_size(1u64);
+        }
 
         if let Some(ref mut checkpoint_key) = self.checkpoint_key.borrow_mut().last_mut() {
             checkpoint_key.entry(*a).or_insert((key, old_val));
